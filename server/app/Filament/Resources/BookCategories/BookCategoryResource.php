@@ -18,14 +18,19 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class BookCategoryResource extends Resource
 {
     protected static ?string $model = BookCategory::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::RectangleGroup;
 
     protected static ?string $recordTitleAttribute = 'books categories';
+
+    protected static ?string $navigationLabel = 'Book Categories';
+
+    protected static string | UnitEnum | null $navigationGroup = 'Books';
 
     public static function form(Schema $schema): Schema
     {
@@ -75,14 +80,6 @@ class BookCategoryResource extends Resource
                     ->sortable()
                     ->badge()
                     ->color(fn ($state): string => $state > 0 ? 'success' : 'gray'),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
