@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Client;
 
 class UsersSeeder extends Seeder
 {
@@ -32,7 +33,15 @@ class UsersSeeder extends Seeder
         ];
 
        foreach ($users as $user) {
-        User::create($user);
-       }
+            $createdUser = User::create($user);
+            if ($createdUser->role == User::CLIENT) {
+                Client::create([
+                    'user_id' => $createdUser->id,
+                    'address' => '123 Main St',
+                    'city' => 'Riyadh',
+                    'balance' => 10000,
+                ]);
+            }
+        }
     }
 }

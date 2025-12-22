@@ -143,4 +143,14 @@ class User extends Authenticatable implements FilamentUser
         // Only allow WEB users to access the admin panel
         return $this->isWebUser();
     }
+
+    /**
+     * Get the client associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function client(): HasOne
+    {
+        return $this->hasOne(User::class, 'user_id', 'id');
+    }
 }
