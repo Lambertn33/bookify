@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class Login extends BaseLogin
 {
@@ -62,14 +63,6 @@ class Login extends BaseLogin
     {
         // Example: Log login attempt
         Log::info('Login attempt', ['email' => $data['email']]);
-        
-        // Example: Check if user account is active
-        // $user = \App\Models\User::where('email', $data['email'])->first();
-        // if ($user && !$user->is_active) {
-        //     throw ValidationException::withMessages([
-        //         'data.email' => 'Your account has been deactivated.',
-        //     ]);
-        // }
     }
 
     /**
@@ -103,15 +96,32 @@ class Login extends BaseLogin
         // Run custom logic before authentication
         $this->beforeAuthenticate($data);
         
+        // Check if user is a web user before attempting authentication
+        $user = User::where('email', $data['email'])->first();
+        if ($user && $user->isMobileUser()) {
+            throw ValidationException::withMessages([
+                'data.email' => 'This account is for mobile app access only. Please use the mobile app to login.',
+            ]);
+        }
+        
         // Call parent authenticate method which handles the actual authentication
         $response = parent::authenticate();
         
-        // If authentication was successful, get the authenticated user
+        // If authentication was successful, verify the user is a web user
         if ($response) {
-            $user = filament()->auth()->user();
-            if ($user) {
+            $authenticatedUser = filament()->auth()->user();
+            if ($authenticatedUser) {
+                // Double-check: ensure authenticated user is a web user
+                if ($authenticatedUser instanceof User && $authenticatedUser->isMobileUser()) {
+                    // Logout the user immediately
+                    filament()->auth()->logout();
+                    throw ValidationException::withMessages([
+                        'data.email' => 'This account is for mobile app access only. Please use the mobile app to login.',
+                    ]);
+                }
+                
                 // Run custom logic after authentication
-                $this->afterAuthenticate($user, $data);
+                $this->afterAuthenticate($authenticatedUser, $data);
             }
         }
         
