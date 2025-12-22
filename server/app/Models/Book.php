@@ -39,6 +39,16 @@ class Book extends Model
         return $this->belongsToMany(Order::class, 'order_items', 'book_id', 'order_id')
         ->withPivot('quantity', 'unit_price', 'total_price');
     }
+
+    /**
+     * Get all of the reviews for the Client
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'book_id');
+    }
     
     public function isStockAlmostEmpty(): bool
     {

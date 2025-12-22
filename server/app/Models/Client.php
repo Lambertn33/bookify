@@ -34,4 +34,14 @@ class Client extends Model
     {
         return $this->hasMany(Order::class, 'client_id');
     }
+
+    /**
+     * Get all of the reviews for the Client
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'client_id');
+    }
 }
