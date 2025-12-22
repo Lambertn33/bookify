@@ -40,6 +40,7 @@ class UsersSeeder extends Seeder
                     'address' => '123 Main St',
                     'city' => 'Riyadh',
                     'balance' => 10000,
+                    'phone' => '250788112233',
                 ]);
             }
         }

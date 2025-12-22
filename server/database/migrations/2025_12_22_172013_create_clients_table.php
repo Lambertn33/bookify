@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->string('address');
             $table->string('city');
+            $table->string('phone');
             $table->decimal('balance', 10, 2)->default(10000);
             $table->timestamps();
         });

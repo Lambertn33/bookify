@@ -11,6 +11,7 @@ class Client extends Model
         'user_id',
         'address',
         'city',
+        'phone',
         'balance',
     ];
 
