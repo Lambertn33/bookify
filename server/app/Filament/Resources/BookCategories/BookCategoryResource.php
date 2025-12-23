@@ -71,9 +71,11 @@ class BookCategoryResource extends Resource
             ->modifyQueryUsing(fn ($query) => $query->withCount('books'))
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('description')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('books_count')
                     ->label('Number of Books')
                     ->counts('books')
