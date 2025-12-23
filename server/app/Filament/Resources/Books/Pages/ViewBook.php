@@ -16,4 +16,6 @@ class ViewBook extends ViewRecord
             EditAction::make(),
         ];
     }
+
+    
 }

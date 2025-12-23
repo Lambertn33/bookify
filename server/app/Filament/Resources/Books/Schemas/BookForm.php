@@ -6,6 +6,7 @@ use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Section;
 use App\Models\BookCategory;
 
@@ -43,9 +44,33 @@ class BookForm
                     ->required(),
                 FileUpload::make('cover_image')
                     ->label('Cover Image')
+                    ->image()
+                    ->disk('s3')
+                    ->directory('covers')
+                    ->visibility('private')
+                    ->acceptedFileTypes(['image/jpeg', 'image/jpg'])
+                    ->maxSize(1024)
+                    ->uploadingMessage('Uploading cover image...')
+                    ->previewable()
+                    ->openable()
+                    ->deletable()
+                    ->fetchFileInformation(false)
                     ->required(),
                 FileUpload::make('book_path')
                     ->label('Book Path')
+                    ->disk('s3')
+                    ->directory('books')
+                    ->visibility('private')
+                    ->uploadingMessage('Uploading book...')
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->openable()
+                    ->deletable()
+                    ->fetchFileInformation(false)
+                    ->required(),
+                TextArea::make('description')
+                    ->label('Description')
+                    ->rows(3)
+                    ->columnSpanFull()
                     ->required(),
             ])
             ->columns(2)

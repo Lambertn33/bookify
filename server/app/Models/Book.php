@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Book extends Model
 {
@@ -61,5 +62,86 @@ class Book extends Model
     public function isStockEmpty(): bool
     {
         return $this->stock == 0;
+    }
+
+    /**
+     * Get the full URL for the cover image
+     *
+     * @return string|null
+     */
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        if (!$this->cover_image) {
+            return null;
+        }
+
+        // If it's already a full URL, return it
+        if (filter_var($this->cover_image, FILTER_VALIDATE_URL)) {
+            return $this->cover_image;
+        }
+
+        // Generate S3 URL
+        return Storage::disk('s3')->url('covers/' . $this->cover_image);
+    }
+
+    /**
+     * Get the full URL for the book PDF
+     *
+     * @return string|null
+     */
+    public function getBookPathUrlAttribute(): ?string
+    {
+        if (!$this->book_path) {
+            return null;
+        }
+
+        // If it's already a full URL, return it
+        if (filter_var($this->book_path, FILTER_VALIDATE_URL)) {
+            return $this->book_path;
+        }
+
+        // Generate S3 URL (book_path already includes 'books/' directory)
+        return Storage::disk('s3')->url($this->book_path);
+    }
+
+    /**
+     * Get a signed URL for the cover image (expires in specified minutes)
+     * Useful for private access
+     *
+     * @param int $expirationMinutes
+     * @return string|null
+     */
+    public function getCoverImageSignedUrl(int $expirationMinutes = 60): ?string
+    {
+        if (!$this->cover_image) {
+            return null;
+        }
+
+        // Generate signed URL for cover image
+        $path = 'covers/' . $this->cover_image;
+        return Storage::disk('s3')->temporaryUrl(
+            $path,
+            now()->addMinutes($expirationMinutes)
+        );
+    }
+
+    /**
+     * Get a signed URL for the book PDF (expires in specified minutes)
+     * Useful for private downloads
+     *
+     * @param int $expirationMinutes
+     * @return string|null
+     */
+    public function getBookPathSignedUrl(int $expirationMinutes = 60): ?string
+    {
+        if (!$this->book_path) {
+            return null;
+        }
+
+        // Generate signed URL (expires in specified minutes)
+        return Storage::disk('s3')->temporaryUrl(
+            $this->book_path,
+            now()->addMinutes($expirationMinutes)
+        );
     }
 }
