@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Jobs\DeleteBookFile;
 
 class BooksTable
 {
@@ -48,11 +49,26 @@ class BooksTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->before(function ($record) {
+                        DeleteBookFile::dispatch($record->book_path);
+                        DeleteBookFile::dispatch($record->cover_image);
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->before(function ($records) {
+                            foreach ($records as $record) {
+                                if ($record->book_path) {
+                                    DeleteBookFile::dispatch($record->book_path);
+                                }
+                                
+                                if ($record->cover_image) {
+                                    DeleteBookFile::dispatch($record->cover_image);
+                                }
+                            }
+                        }),
                 ]),
             ]);
     }

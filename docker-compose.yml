@@ -1,4 +1,18 @@
 services:
+  redis:
+    image: redis:latest
+    container_name: books-store-redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - books-store-redis-data:/data
   server:
     build:
       context: ./server
@@ -21,8 +35,13 @@ services:
       DB_DATABASE: books-store
       DB_USERNAME: books-store
       DB_PASSWORD: books-store
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
@@ -55,3 +74,4 @@ services:
       - books-store-db-data:/var/lib/mysql
 volumes:
   books-store-db-data:
+  books-store-redis-data:

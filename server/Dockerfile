@@ -17,7 +17,10 @@ RUN apk add --no-cache \
     freetype-dev \
     zip \
     unzip \
-    mysql-client
+    mysql-client \
+    autoconf \
+    g++ \
+    make
 
 # Configure GD extension
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
@@ -34,6 +37,11 @@ RUN docker-php-ext-install \
     intl \
     opcache \
     zip
+
+# Install Redis extension via PECL
+RUN pecl install redis && \
+    docker-php-ext-enable redis && \
+    apk del autoconf g++ make
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
