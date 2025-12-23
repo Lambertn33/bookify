@@ -8,8 +8,11 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Notifications\Notification;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
 use App\Jobs\DeleteBookFile;
+use App\Models\BookCategory;
 
 class BooksTable
 {
@@ -44,12 +47,21 @@ class BooksTable
                     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->options(BookCategory::all()->pluck('name', 'id'))
+                    ->searchable(),
             ])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
+                    ->successNotification(
+                        Notification::make()
+                            ->title('Book deleted successfully')
+                            ->body('The book has been deleted successfully.')
+                            ->success()
+                    )
                     ->before(function ($record) {
                         DeleteBookFile::dispatch($record->book_path);
                         DeleteBookFile::dispatch($record->cover_image);
@@ -58,6 +70,12 @@ class BooksTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
+                        ->successNotification(
+                            Notification::make()
+                                ->title('Books deleted successfully')
+                                ->body('The selected books have been deleted successfully.')
+                                ->success()
+                        )
                         ->before(function ($records) {
                             foreach ($records as $record) {
                                 if ($record->book_path) {

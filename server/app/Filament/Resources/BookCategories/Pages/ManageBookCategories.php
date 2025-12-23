@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BookCategories\Pages;
 use App\Filament\Resources\BookCategories\BookCategoryResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Notifications\Notification;
 
 class ManageBookCategories extends ManageRecords
 {
@@ -14,7 +15,13 @@ class ManageBookCategories extends ManageRecords
     {
         return [
             CreateAction::make()
-                ->createAnother(false) // Hide "Create & create another" button
+                ->createAnother(false)
+                ->successNotification(
+                    Notification::make()
+                        ->title('Book category created successfully')
+                        ->body('The book category has been created successfully.')
+                        ->success()
+                )
         ];
     }
     

@@ -17,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Notifications\Notification;
 use Filament\Tables\Table;
 use UnitEnum;
 
@@ -39,6 +40,7 @@ class BookCategoryResource extends Resource
                 TextInput::make('name')
                     ->required()
                     ->label('Book Category Name')
+                    ->unique(ignoreRecord: true)
                     ->columnSpanFull(),
 
                 Textarea::make('description')
@@ -88,12 +90,30 @@ class BookCategoryResource extends Resource
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                ->successNotification(
+                    Notification::make()
+                        ->title('Book category updated successfully')
+                        ->body('The book category has been updated successfully.')
+                        ->success()
+                ),
+                DeleteAction::make()
+                    ->successNotification(
+                        Notification::make()
+                            ->title('Book category deleted successfully')
+                            ->body('The book category has been deleted successfully.')
+                            ->success()
+                ),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->successNotification(
+                            Notification::make()
+                                ->title('Book categories deleted successfully')
+                                ->body('The selected book categories have been deleted successfully.')
+                                ->success()
+                        ),
                 ]),
             ]);
     }
