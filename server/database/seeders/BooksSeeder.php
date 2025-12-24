@@ -18,35 +18,9 @@ class BooksSeeder extends Seeder
      */
     public function run(): void
     {
-        // Delete existing books and their S3 files before seeding
-        $existingBooks = Book::get();
-        if (count($existingBooks) > 0) {
-            $this->command->info("Deleting {$existingBooks->count()} existing book(s) and their S3 files...");
-            
-            foreach ($existingBooks as $book) {
-                if ($book->book_path) {
-                    $pdfPath = $book->book_path;
-                    if (Storage::disk('s3')->exists($pdfPath)) {
-                        Storage::disk('s3')->delete($pdfPath);
-                        $this->command->info("Deleted PDF from S3: {$pdfPath}");
-                    }
-                }
-                
-                if ($book->cover_image) {
-                    $coverPath = 'covers/' . $book->cover_image;
-                    if (Storage::disk('s3')->exists($coverPath)) {
-                        Storage::disk('s3')->delete($coverPath);
-                        $this->command->info("Deleted cover image from S3: {$coverPath}");
-                    }
-                }
-                
-                $book->delete();
-                $this->command->info("Deleted book record: {$book->title}");
-            }
-            
-            $this->command->info("Finished deleting existing books.");
-        }
-        
+        Storage::disk('s3')->deleteDirectory('books');
+        Storage::disk('s3')->deleteDirectory('covers');
+       
         $categories = BookCategory::all()->pluck('id', 'name');
         
         $books = [

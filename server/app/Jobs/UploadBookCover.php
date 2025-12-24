@@ -63,7 +63,7 @@ class UploadBookCover implements ShouldQueue
     {
         $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
         
-        // Generate a random string similar to Filament's FileUpload component
+        // Generate a random string
         // This creates filenames like: 01KD85CKD9KD14NH5CMYN5VAAD.jpg
         $randomString = Str::upper(Str::random(25));
         
