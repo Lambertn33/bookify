@@ -21,6 +21,7 @@ services:
       - 8000:8000
     volumes:
       - ./server:/var/www/html
+      - books-store-vendor:/var/www/html/vendor
     container_name: books-store-server
     working_dir: /var/www/html
     environment:
@@ -50,7 +51,7 @@ services:
       retries: 5
       start_period: 30s
     command: >
-      sh -c "composer install --no-dev --prefer-dist --no-interaction &&
+      sh -c "composer install --no-dev --prefer-dist --no-interaction --no-scripts &&
              php artisan migrate --force &&
              php artisan serve --host=0.0.0.0 --port=8000"
   db:
@@ -75,3 +76,4 @@ services:
 volumes:
   books-store-db-data:
   books-store-redis-data:
+  books-store-vendor:

@@ -75,12 +75,11 @@ class Book extends Model
             return null;
         }
 
-        // If it's already a full URL, return it
         if (filter_var($this->cover_image, FILTER_VALIDATE_URL)) {
             return $this->cover_image;
         }
 
-        // Generate S3 URL
+ 
         return Storage::disk('s3')->url('covers/' . $this->cover_image);
     }
 
@@ -138,9 +137,15 @@ class Book extends Model
             return null;
         }
 
+        // book_path should now contain the full S3 path (e.g., 'books/filename.pdf')
+        // But we'll handle both cases for backward compatibility
+        $s3Path = str_starts_with($this->book_path, 'books/') 
+            ? $this->book_path 
+            : 'books/' . $this->book_path;
+
         // Generate signed URL (expires in specified minutes)
         return Storage::disk('s3')->temporaryUrl(
-            $this->book_path,
+            $s3Path,
             now()->addMinutes($expirationMinutes)
         );
     }

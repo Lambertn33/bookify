@@ -47,13 +47,20 @@ class BookForm
                     ->image()
                     ->disk('s3')
                     ->directory('covers')
-                    ->acceptedFileTypes(['image/jpeg', 'image/jpg'])
+                    ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/webp'])
                     ->maxSize(1024)
                     ->uploadingMessage('Uploading cover image...')
                     ->previewable()
                     ->openable()
                     ->fetchFileInformation(false)
                     ->deletable()
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
                     ->required(),
                 FileUpload::make('book_path')
                     ->label('Book Path')
