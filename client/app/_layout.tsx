@@ -11,7 +11,7 @@ import {
   Poppins_200ExtraLight,
   Poppins_100Thin,
 } from "@expo-google-fonts/poppins";
-
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
@@ -40,5 +40,9 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </SafeAreaProvider>
+  );
 }

@@ -1,13 +1,14 @@
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { AppView, AppText, AppTitle, AppButton } from "./components/ui";
+import { AppView, AppText, AppTitle, AppButton } from "@/components/ui";
+import { Link } from "expo-router";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const IMAGE_HEIGHT = SCREEN_HEIGHT * 0.5;
 const CONTENT_HEIGHT = SCREEN_HEIGHT * 0.5;
 
-export default function Index() {
+export default function HomeScreen() {
   return (
     <AppView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -33,10 +34,11 @@ export default function Index() {
             where you can find your next favorite book.
           </AppText>
         </AppView>
-
-        <AppButton onPress={() => console.log("Get Started pressed")} style={styles.button}>
-          <Text style={styles.buttonText}>Get Started</Text>
-        </AppButton>
+        <Link href="/(shop)/books/bookList" asChild>
+          <AppButton style={styles.button}>
+            <Text style={styles.buttonText}>Get Started</Text>
+          </AppButton>
+        </Link>
       </AppView>
     </AppView>
   );
