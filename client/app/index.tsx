@@ -1,6 +1,10 @@
-import { Text, View, Pressable, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, Text } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import AppView from "./components/ui/AppView";
+import AppText from "./components/ui/AppText";
+import AppTitle from "./components/ui/AppTitle";
+import AppButton from "./components/ui/AppButton";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const IMAGE_HEIGHT = SCREEN_HEIGHT * 0.6;
@@ -8,7 +12,7 @@ const CONTENT_HEIGHT = SCREEN_HEIGHT * 0.4;
 
 export default function Index() {
   return (
-    <View style={styles.container}>
+    <AppView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
           source={require("../assets/images/reading.jpg")}
@@ -22,19 +26,19 @@ export default function Index() {
         />
       </View>
 
-      <View style={styles.contentContainer}>
-        <Text style={styles.text}>
-          Lorem ipsum dolor{"\n"}
-          sit amet,{"\n"}
-          consectetur{"\n"}
-          adipiscing eli
-        </Text>
+      <AppView style={styles.contentContainer}>
+        <AppView style={styles.textContainer}>
+          <AppTitle>Welcome to the world of reading,</AppTitle>
+          <AppText style={styles.description}>
+            where you can find your next favorite book.
+          </AppText>
+        </AppView>
 
-        <Pressable style={styles.button} onPress={() => console.log("Get Started pressed")}>
+        <AppButton onPress={() => console.log("Get Started pressed")}>
           <Text style={styles.buttonText}>Get Started</Text>
-        </Pressable>
-      </View>
-    </View>
+        </AppButton>
+      </AppView>
+    </AppView>
   );
 }
 
@@ -66,35 +70,23 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     paddingBottom: 40,
     justifyContent: "center",
-    alignItems: "center",
     flex: 1,
   },
-  text: {
-    fontSize: 24,
-    fontWeight: "400",
-    color: "#000000",
-    textAlign: "center",
-    lineHeight: 32,
+  textContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 40,
   },
-  button: {
-    backgroundColor: "#000000",
-    paddingVertical: 16,
-    paddingHorizontal: 48,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+  description: {
+    fontSize: 16,
+    textAlign: "left",
+    lineHeight: 24,
   },
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     textAlign: "center",
   },
 });
