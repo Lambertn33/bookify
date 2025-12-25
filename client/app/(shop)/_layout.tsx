@@ -9,7 +9,7 @@ export default function ShopLayout() {
         tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "#000000",
         tabBarStyle: {
-          backgroundColor: "rgba(200, 200, 200, 0.4)",
+          backgroundColor: "rgba(200, 200, 200, 0.7)",
           height: 60,
           paddingTop: 8,
           marginLeft: 25,

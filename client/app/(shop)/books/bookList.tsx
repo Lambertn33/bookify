@@ -2,6 +2,7 @@
 import { StyleSheet } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Categories, Header, Search, Books } from '@/components/books';
+
 const bookList = () => {
   const mockCategories = [
     {
@@ -53,6 +54,37 @@ const bookList = () => {
       name: 'Religion',
     },
   ];
+
+  const mockBooks = [
+    {
+      id: 1,
+      category: 'Fiction',
+      title: 'The Great Gatsby',
+      author: 'F. Scott Fitzgerald',
+      price: 10.00,
+    },
+    {
+      id: 2,
+      category: 'Non-Fiction',
+      title: 'The Great Gatsby',
+      author: 'F. Scott Fitzgerald',
+      price: 100.00,
+    },
+    {
+      id: 3,
+      category: 'Biography',
+      title: 'The Great Gatsby',
+      author: 'F. Scott Fitzgerald',
+      price: 100.00,
+    },
+    {
+      id: 4,
+      category: 'Ancient History',
+      title: 'The Great Gatsby',
+      author: 'F. Scott Fitzgerald',
+      price: 100.00,
+    },
+  ];
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <Header title="Books List" />
@@ -67,7 +99,7 @@ const bookList = () => {
         title="Top Rated Categories"
        />
        
-      <Books />
+      <Books books={mockBooks} />
     </SafeAreaView>
   );
 };

@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "Poppins_600SemiBold",
     color: "#000000",
-    textAlign: "center",
     lineHeight: 32,
     fontWeight: "600",
   },
