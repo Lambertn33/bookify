@@ -111,11 +111,11 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 20,
-    fontFamily: "Poppins_600SemiBold",
-    color: "4B5320",
+    fontFamily: "Poppins_800ExtraBold",
+    color: "#4B5320",
     textAlign: "center",
     lineHeight: 28,
-    fontWeight: "600",
+    fontWeight: "800",
   },
   button: {
     backgroundColor: "#4B5320",

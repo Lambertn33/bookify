@@ -1,20 +1,82 @@
-import { StyleSheet, Text } from 'react-native'
+
+import { StyleSheet } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from 'react'
+import { Categories, Header, Search } from '@/components/books';
 
 const bookList = () => {
+  const mockCategories = [
+    {
+      id: 1,
+      name: 'Fiction',
+    },
+    {
+      id: 2,
+      name: 'Non-Fiction',
+    },
+    {
+      id: 3,
+      name: 'Biography',
+    },
+    {
+      id: 4,
+      name: 'Ancient History',
+    },
+    {
+      id: 5,
+      name: 'Science',
+    },
+    {
+      id: 6,
+      name: 'Technology',
+    },
+    {
+      id: 7,
+      name: 'Art',
+    },
+    {
+      id: 8,
+      name: 'Music',
+    },
+    {
+      id: 9,
+      name: 'Travel',
+    },
+    {
+      id: 10,
+      name: 'Cooking',
+    },
+    {
+      id: 11,
+      name: 'Health',
+    },
+    {
+      id: 12,
+      name: 'Religion',
+    },
+  ];
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <Text>bookList</Text>
-    </SafeAreaView>
-  )
-}
+      <Header title="Books List" />
+      <Search 
+        title="Read your favorite book"
+        text="Discover the best books in the world"
+        placeholder="Search a book...."
+      />
 
-export default bookList
+      <Categories 
+        categories={mockCategories} 
+        title="Top Rated Categories"
+       />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
-})
+});
+
+export default bookList;
