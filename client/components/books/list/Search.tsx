@@ -12,23 +12,24 @@ interface SearchProps {
 const Search = ({ title, text, placeholder }: SearchProps) => {
     const [searchValue, setSearchValue] = useState('');
     const handleChangeText = (text: string) => setSearchValue(text);
-  return (
-    <AppView style={styles.searchContainer}>
-    <AppTitle style={styles.searchTitle}>{title}</AppTitle>
-    <AppText style={styles.searchText}>{text}</AppText>
-    <AppTextInput style={styles.searchInput} placeholder={placeholder} value={searchValue} handleChangeText={handleChangeText} 
-      icon={<Octicons name="search" size={20} color="#999999" />}
-      iconPosition="left"
-      />
-  </AppView>
-  )
+
+    return (
+        <AppView style={styles.searchContainer}>
+        <AppTitle style={styles.searchTitle}>{title}</AppTitle>
+        <AppText style={styles.searchText}>{text}</AppText>
+        <AppTextInput style={styles.searchInput} placeholder={placeholder} value={searchValue} handleChangeText={handleChangeText} 
+        icon={<Octicons name="search" size={20} color="#999999" />}
+        iconPosition="left"
+        />
+    </AppView>
+    )
 }
 
 export default Search
 
 const styles = StyleSheet.create({
     searchContainer: {
-        marginTop: 40,
+        marginTop: 30,
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
@@ -51,8 +52,8 @@ const styles = StyleSheet.create({
         opacity: 0.2,
         lineHeight: 24,
       },
-    
+      
       searchInput: {
-        marginTop: 20,
+        marginTop: 10,
       },
 })

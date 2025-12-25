@@ -21,7 +21,7 @@ export default function AppView({
 
 const styles = StyleSheet.create({
   default: {
-    // Default View styles - can be overridden via style prop
+    marginVertical: 10,
   },
 });
 

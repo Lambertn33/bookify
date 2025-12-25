@@ -1,8 +1,7 @@
 
 import { StyleSheet } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Categories, Header, Search } from '@/components/books';
-
+import { Categories, Header, Search, Books } from '@/components/books';
 const bookList = () => {
   const mockCategories = [
     {
@@ -67,6 +66,8 @@ const bookList = () => {
         categories={mockCategories} 
         title="Top Rated Categories"
        />
+       
+      <Books />
     </SafeAreaView>
   );
 };

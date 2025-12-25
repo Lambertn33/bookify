@@ -1,5 +1,6 @@
 import { FlatList, StyleSheet } from 'react-native'
 import { AppText, AppView } from '@/components/ui'
+import { TouchableOpacity } from 'react-native'
 
 interface Category {
     id: number;
@@ -13,9 +14,11 @@ interface CategoriesProps {
 
 const CategoryItem = ({ category }: { category: Category }) => {
   return (
-    <AppView style={styles.categoryItem}>
-      <AppText style={styles.categoryItemText}>{category.name}</AppText>
-    </AppView>
+      <TouchableOpacity>
+        <AppView style={styles.categoryItem}>
+          <AppText style={styles.categoryItemText}>{category.name}</AppText>
+        </AppView>
+      </TouchableOpacity>
   );
 };
 
@@ -56,7 +59,6 @@ const styles = StyleSheet.create({
       },
     
       categoriesContainer: {
-        marginTop: 20,
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
