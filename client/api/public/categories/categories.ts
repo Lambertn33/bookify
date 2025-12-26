@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Platform } from 'react-native';
 import { getApiUrl } from '@/api/constants';
 
 const api = axios.create({

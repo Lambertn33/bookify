@@ -5,23 +5,11 @@ import { useCategories } from '@/hooks/useCategories';
 import { AppText } from '@/components/ui';
 
 const bookList = () => {
-  const { data: categories, isLoading, isError, error, isFetchingNextPage, hasNextPage, fetchNextPage, refetch } = useCategories({ page: 1, perPage: 10 });
+  const { 
+    data: categories,
+    isLoading: isCategoriesLoading,
+      isError: isCategoriesError, error: categoriesError, isFetchingNextPage: isCategoriesFetchingNextPage, hasNextPage: isCategoriesHasNextPage, fetchNextPage: categoriesFetchNextPage, refetch: categoriesRefetch } = useCategories({ page: 1, perPage: 10 });
 
-  if (isLoading) {
-    return (
-      <SafeAreaView style={styles.container} edges={["top"]}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </SafeAreaView>
-    );
-  }
-  if (isError) {
-    return (
-      <SafeAreaView style={styles.container} edges={["top"]}>
-        <AppText>Error loading categories</AppText>
-        {error && <AppText>{error.message || 'Unknown error'}</AppText>}
-      </SafeAreaView>
-    );
-  }
 
   const mockBooks = [
     {
@@ -65,6 +53,13 @@ const bookList = () => {
       <Categories 
         categories={categories || []} 
         title="Top Rated Categories"
+        isLoading={isCategoriesLoading}
+        isError={isCategoriesError}
+        error={categoriesError}
+        isFetchingNextPage={isCategoriesFetchingNextPage}
+        hasNextPage={isCategoriesHasNextPage}
+        fetchNextPage={categoriesFetchNextPage}
+        refetch={categoriesRefetch}
        />
        
       <Books books={mockBooks} />
