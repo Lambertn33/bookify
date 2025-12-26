@@ -1,4 +1,4 @@
-export { default as Categories } from './list/Categories';
-export { default as Search } from './list/Search';
-export { default as Header } from './list/Header';
-export { default as Books } from './list/Books';
+export { default as Categories } from './list/categories/Categories';
+export { default as Search } from './list/search/Search';
+export { default as Header } from './list/header/Header';
+export { default as Books } from './list/books/Books';
