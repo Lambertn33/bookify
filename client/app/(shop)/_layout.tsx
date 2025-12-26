@@ -1,25 +1,64 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ComponentProps } from "react";
+
+type IoniconName = ComponentProps<typeof Ionicons>["name"];
+
+type TabIconConfig = {
+  focused: IoniconName;
+  unfocused: IoniconName;
+};
+
+const createTabBarIcon = (iconConfig: TabIconConfig) => {
+  return ({ focused }: { focused: boolean }) => (
+    <Ionicons
+      name={focused ? iconConfig.focused : iconConfig.unfocused}
+      size={focused ? 20 : 24}
+      color={focused ? "#FFFFFF" : "#999999"}
+      style={{
+        backgroundColor: focused ? "#000000" : "transparent",
+        borderRadius: 24,
+        padding: focused ? 10 : 8,
+        width: focused ? 44 : 40,
+        height: focused ? 44 : 40,
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        display: "flex",
+      }}
+    />
+  );
+};
 
 export default function ShopLayout() {
+  const insets = useSafeAreaInsets();
+
+  const tabBarStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.75)",
+    height: 70,
+    paddingTop: 10,
+    paddingBottom: Math.max(insets.bottom, 10),
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 25,
+    position: "absolute" as const,
+    bottom: 15,
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    borderTopWidth: 0,
+  };
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#FFFFFF",
-        tabBarInactiveTintColor: "#000000",
-        tabBarStyle: {
-          backgroundColor: "rgba(200, 200, 200, 0.7)",
-          height: 60,
-          paddingTop: 8,
-          marginLeft: 25,
-          marginRight: 25,
-          borderRadius: 35,
-          position: "absolute",
-          bottom: 20,
-          elevation: 0,
-          shadowOpacity: 0,
-        },
+        tabBarInactiveTintColor: "#666666",
+        tabBarStyle,
         tabBarShowLabel: false,
       }}
     >
@@ -27,52 +66,22 @@ export default function ShopLayout() {
         name="books/bookList"
         options={{
           title: "Books",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name="home"
-              size={22}
-              color={focused ? "#FFFFFF" : "#000000"}
-              style={{
-                backgroundColor: focused ? "rgba(192, 192, 192, 0.5)" : "transparent",
-                borderRadius: 20,
-                padding: 8,
-                width: 36,
-                height: 36,
-                textAlign: "center",
-                lineHeight: 20,
-              }}
-            />
-          ),
+          tabBarIcon: createTabBarIcon({ focused: "home", unfocused: "home-outline" }),
         }}
       />
       <Tabs.Screen
         name="cart/CartScreen"
         options={{
           title: "Cart",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name="cart"
-              size={26}
-              color={focused ? "#FFFFFF" : "#000000"}
-              style={{
-                backgroundColor: focused ? "rgba(200, 200, 200, 0.5)" : "transparent",
-                borderRadius: 20,
-                padding: 8,
-                width: 36,
-                height: 36,
-                textAlign: "center",
-                lineHeight: 20,
-              }}
-            />
-          ),
+          tabBarIcon: createTabBarIcon({ focused: "cart", unfocused: "cart-outline" }),
         }}
       />
       <Tabs.Screen
         name="books/[bookItem]"
         options={{
-          href: null, // Hide from tab bar - this is a detail screen
+          href: null,
         }}
       />
-      </Tabs>
+    </Tabs>
   );
 }
