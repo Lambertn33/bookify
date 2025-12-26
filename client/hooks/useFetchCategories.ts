@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getCategories } from '@/api/public/categories/categories';
+import { getCategories } from '@/api';
 
 interface UseCategoriesProps {
     page?: number;
@@ -30,7 +30,7 @@ interface CategoriesResponse {
     };
 }
 
-export const useCategories = ({ page = 1, perPage = 10 }: UseCategoriesProps = {}) => {
+export const useFetchCategories = ({ page = 1, perPage = 10 }: UseCategoriesProps = {}) => {
     const { data, isLoading, isError, error, isFetchingNextPage, hasNextPage, fetchNextPage, refetch } 
     = useInfiniteQuery<CategoriesResponse, Error, Category[], readonly unknown[], number>({
         queryKey: ['categories', page, perPage],

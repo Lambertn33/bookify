@@ -1,46 +1,31 @@
-import { ActivityIndicator, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Categories, Header, Search, Books } from '@/components/books';
-import { useCategories } from '@/hooks/useCategories';
-import { AppText } from '@/components/ui';
+import { useFetchCategories, useFetchBooks } from '@/hooks';
+
 
 const bookList = () => {
   const { 
     data: categories,
     isLoading: isCategoriesLoading,
-      isError: isCategoriesError, error: categoriesError, isFetchingNextPage: isCategoriesFetchingNextPage, hasNextPage: isCategoriesHasNextPage, fetchNextPage: categoriesFetchNextPage, refetch: categoriesRefetch } = useCategories({ page: 1, perPage: 10 });
+    isError: isCategoriesError, 
+    error: categoriesError, 
+    isFetchingNextPage: isCategoriesFetchingNextPage, 
+    hasNextPage: isCategoriesHasNextPage, 
+    fetchNextPage: categoriesFetchNextPage, 
+    refetch: categoriesRefetch }
+  = useFetchCategories({ page: 1, perPage: 10 });
 
+  const { 
+    data: books,
+    isLoading: isBooksLoading,
+    isError: isBooksError,
+    error: booksError,
+    isFetchingNextPage: isBooksFetchingNextPage,
+    hasNextPage: isBooksHasNextPage,
+    fetchNextPage: booksFetchNextPage,
+    refetch: booksRefetch } = useFetchBooks({ page: 1, perPage: 10 });
 
-  const mockBooks = [
-    {
-      id: 1,
-      category: 'Fiction',
-      title: 'The Great Gatsby',
-      author: 'F. Scott Fitzgerald',
-      price: 10.00,
-    },
-    {
-      id: 2,
-      category: 'Non-Fiction',
-      title: 'The Great Gatsby',
-      author: 'F. Scott Fitzgerald',
-      price: 100.00,
-    },
-    {
-      id: 3,
-      category: 'Biography',
-      title: 'The Great Gatsby',
-      author: 'F. Scott Fitzgerald',
-      price: 100.00,
-    },
-    {
-      id: 4,
-      category: 'Ancient History',
-      title: 'The Great Gatsby',
-      author: 'F. Scott Fitzgerald',
-      price: 100.00,
-    },
-  ];
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <Header title="Books List" />
@@ -62,7 +47,16 @@ const bookList = () => {
         refetch={categoriesRefetch}
        />
        
-      <Books books={mockBooks} />
+      <Books
+        books={books || []}
+        isLoading={isBooksLoading}
+        isError={isBooksError}
+        error={booksError}
+        isFetchingNextPage={isBooksFetchingNextPage}
+        hasNextPage={isBooksHasNextPage}
+        fetchNextPage={booksFetchNextPage}
+        refetch={booksRefetch}
+       />
     </SafeAreaView>
   );
 };
