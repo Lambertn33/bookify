@@ -8,7 +8,7 @@ interface Category {
 }
 
 interface CategoriesProps {
-    categories: Category[];
+    categories: Category[] | undefined;
     title: string;
 }
 
@@ -27,7 +27,7 @@ const Categories = ({ categories, title }: CategoriesProps) => {
     <AppView style={styles.categoriesContainer}>
         <AppText style={styles.categoriesTitle}>{title}</AppText>
         <FlatList
-          data={categories}
+          data={categories || []}
           renderItem={({ item }: { item: Category }) => 
           <CategoryItem category={item} />
           }
