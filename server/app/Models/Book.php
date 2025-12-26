@@ -80,7 +80,7 @@ class Book extends Model
         }
 
  
-        return Storage::disk('s3')->url('covers/' . $this->cover_image);
+        return Storage::disk('s3')->url($this->cover_image);
     }
 
     /**
