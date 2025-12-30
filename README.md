@@ -80,4 +80,31 @@ The application consists of a React Native mobile app (client) that communicates
 
 ### Access Points
 - **API**: http://localhost:8000/api
-- **Admin Panel**: http://localhost:8000/admin (if configured)
+- **Admin Panel**: http://localhost:8000/admin
+
+## 🔐 Admin Dashboard
+
+The application includes a Filament admin panel for managing books, categories, and other resources.
+
+### Accessing the Admin Panel
+
+1. **URL**: http://localhost:8000/admin
+
+2. **Default Credentials** (after running seeders):
+   - Email: `admin@books-store.com`
+   - Password: `password123`
+
+### Features
+
+- **Books Management**: Create, edit, view, and delete books
+- **Categories Management**: Manage book categories
+- **File Uploads**: Upload book covers and PDFs to S3
+- **Dashboard**: Overview of store statistics
+
+### Creating Admin User
+
+If you need to create a new admin user, run the seeder:
+```bash
+cd server
+php artisan db:seed --class=UsersSeeder
+```
