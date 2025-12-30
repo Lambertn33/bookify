@@ -41,4 +41,17 @@ class BooksController extends Controller
                 'books' => $books,
             ]);
         }
+
+        public function show($id)
+        {
+            $book = Book::with('category:id,name')
+                ->select('id', 'category_id', 'title', 'author', 'description', 'price', 'cover_image', 'published_year')
+                ->findOrFail($id);
+
+            $book->cover_image_url = $book->getCoverImageSignedUrl(10080); // 7 days expiration
+
+            return response()->json([
+                'book' => $book,
+            ]);
+        }
 }

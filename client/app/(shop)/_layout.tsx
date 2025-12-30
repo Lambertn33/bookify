@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Tabs, useSegments } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComponentProps } from "react";
@@ -33,8 +33,12 @@ const createTabBarIcon = (iconConfig: TabIconConfig) => {
 
 export default function ShopLayout() {
   const insets = useSafeAreaInsets();
+  const segments = useSegments();
 
-  const tabBarStyle = {
+  // Check if we're on the bookItem detail page
+  const isBookItemPage = segments.some(segment => segment === '[bookItem]' || segment.includes('bookItem'));
+
+  const defaultTabBarStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.75)",
     height: 70,
     paddingTop: 10,
@@ -52,13 +56,20 @@ export default function ShopLayout() {
     borderTopWidth: 0,
   };
 
+  const hiddenTabBarStyle = {
+    ...defaultTabBarStyle,
+    height: 0,
+    opacity: 0,
+    pointerEvents: 'none' as const,
+  };
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "#666666",
-        tabBarStyle,
+        tabBarStyle: isBookItemPage ? hiddenTabBarStyle : defaultTabBarStyle,
         tabBarShowLabel: false,
       }}
     >

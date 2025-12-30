@@ -22,3 +22,8 @@ export const getBooks = async (
     });
     return response.data;
 }
+
+export const getBook = async (id: number) => {
+    const response = await api.get(`/books/${id}`);
+    return response.data;
+}

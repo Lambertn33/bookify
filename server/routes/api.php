@@ -12,4 +12,5 @@ use App\Http\Controllers\Client\BooksController;
 Route::get('/categories', [BooksCategoriesController::class, 'index']);
 Route::prefix('books')->group(function () {
     Route::get('/', [BooksController::class, 'index']);
+    Route::get('/{id}', [BooksController::class, 'show']);
 });
