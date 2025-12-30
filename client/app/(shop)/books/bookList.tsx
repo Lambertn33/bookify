@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Categories, Search, Books } from '@/components/books';
-import { AppHeader } from '@/components/ui';
+import { AppHeader, AppIconWithBadge } from '@/components/ui';
 import { useFetchCategories, useFetchBooks } from '@/hooks';
-import { Octicons } from '@expo/vector-icons';
+import { Ionicons, Octicons, MaterialIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 
 
@@ -23,9 +23,7 @@ const bookList = () => {
   }, [search]);
 
   const handleChangeSearch = (text: string) => setSearch(text);
-  const handleSearch = () => {
-    console.log('search', search);
-  }
+
   const handleSelectCategory = (categoryId: number) => {
     setSelectedCategory(prev => prev === categoryId ? null : categoryId);
   };
@@ -54,8 +52,17 @@ const bookList = () => {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <AppHeader 
         title="Books List" 
-        leftIcon={<Octicons name="bell-fill" size={24} color="black" />}
-        rightIcon={<Octicons name="filter" size={24} color="black" />}
+        leftIcon={
+          <AppIconWithBadge 
+            icon={<MaterialIcons name="favorite-border" size={32} color="black" />} 
+            cartCount={1} 
+          />
+        }
+        rightIcon={
+          <AppIconWithBadge 
+            icon={<Ionicons name="cart" size={32} color="black" />} 
+            cartCount={1} 
+          />}
       />
       <Search 
         title="Read your favorite book"
@@ -63,7 +70,6 @@ const bookList = () => {
         placeholder="Search a book...."
         search={search}
         handleChangeSearch={handleChangeSearch}
-        handleSearch={handleSearch}
       />
 
       <Categories 

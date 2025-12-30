@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native'
 import { AppText, AppView } from '@/components/ui'
-import { Octicons } from '@expo/vector-icons'
 
 interface HeaderProps {
   title: string;
@@ -28,7 +27,7 @@ const styles = StyleSheet.create({
       },
     
       headerTitle: {
-        fontSize: 18,
+        fontSize: 24,
         fontFamily: "Poppins_600SemiBold",
         color: "#000000",
         textAlign: "center",

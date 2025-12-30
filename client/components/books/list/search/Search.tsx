@@ -9,10 +9,9 @@ interface SearchProps {
     placeholder: string;
     search: string;
     handleChangeSearch: (text: string) => void;
-    handleSearch: () => void;
 }
 
-const Search = ({ title, text, placeholder, search, handleChangeSearch, handleSearch }: SearchProps) => {
+const Search = ({ title, text, placeholder, search, handleChangeSearch }: SearchProps) => {
     return (
         <AppView style={styles.searchContainer}>
         <AppTitle style={styles.searchTitle}>{title}</AppTitle>

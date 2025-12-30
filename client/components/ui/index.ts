@@ -4,3 +4,4 @@ export { default as AppTitle } from "./AppTitle";
 export { default as AppButton } from "./AppButton";
 export { default as AppTextInput } from "./AppTextInput";
 export { default as AppHeader } from "./AppHeader";
+export { default as AppIconWithBadge } from "./AppIconWithBadge";
