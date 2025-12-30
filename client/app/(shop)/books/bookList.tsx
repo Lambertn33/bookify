@@ -4,9 +4,31 @@ import { Categories, Search, Books } from '@/components/books';
 import { AppHeader } from '@/components/ui';
 import { useFetchCategories, useFetchBooks } from '@/hooks';
 import { Octicons } from '@expo/vector-icons';
+import { useState, useEffect } from 'react';
 
 
 const bookList = () => {
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+
+  const handleChangeSearch = (text: string) => setSearch(text);
+  const handleSearch = () => {
+    console.log('search', search);
+  }
+  const handleSelectCategory = (categoryId: number) => {
+    setSelectedCategory(prev => prev === categoryId ? null : categoryId);
+  };
   const { 
     data: categories,
     isLoading: isCategoriesLoading,
@@ -26,7 +48,7 @@ const bookList = () => {
     isFetchingNextPage: isBooksFetchingNextPage,
     hasNextPage: isBooksHasNextPage,
     fetchNextPage: booksFetchNextPage,
-    refetch: booksRefetch } = useFetchBooks({ page: 1, perPage: 10 });
+    refetch: booksRefetch } = useFetchBooks({ page: 1, perPage: 10, search: debouncedSearch, categoryId: selectedCategory ?? undefined });
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
@@ -39,6 +61,9 @@ const bookList = () => {
         title="Read your favorite book"
         text="Discover the best books in the world"
         placeholder="Search a book...."
+        search={search}
+        handleChangeSearch={handleChangeSearch}
+        handleSearch={handleSearch}
       />
 
       <Categories 
@@ -51,6 +76,8 @@ const bookList = () => {
         hasNextPage={isCategoriesHasNextPage}
         fetchNextPage={categoriesFetchNextPage}
         refetch={categoriesRefetch}
+        selectedCategory={selectedCategory}
+        handleSelectCategory={handleSelectCategory}
        />
        
       <Books

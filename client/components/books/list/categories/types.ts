@@ -13,6 +13,8 @@ export interface CategoriesProps {
   hasNextPage?: boolean;
   fetchNextPage?: () => void;
   refetch?: () => void;
+  selectedCategory?: number | null;
+  handleSelectCategory?: (category: number) => void;
 }
 
 

@@ -7,19 +7,19 @@ interface SearchProps {
     title: string;
     text: string;
     placeholder: string;
+    search: string;
+    handleChangeSearch: (text: string) => void;
+    handleSearch: () => void;
 }
 
-const Search = ({ title, text, placeholder }: SearchProps) => {
-    const [searchValue, setSearchValue] = useState('');
-    const handleChangeText = (text: string) => setSearchValue(text);
-
+const Search = ({ title, text, placeholder, search, handleChangeSearch, handleSearch }: SearchProps) => {
     return (
         <AppView style={styles.searchContainer}>
         <AppTitle style={styles.searchTitle}>{title}</AppTitle>
         <AppText style={styles.searchText}>{text}</AppText>
-        <AppTextInput style={styles.searchInput} placeholder={placeholder} value={searchValue} handleChangeText={handleChangeText} 
-        icon={<Octicons name="search" size={20} color="#999999" />}
-        iconPosition="left"
+        <AppTextInput style={styles.searchInput} placeholder={placeholder} value={search} handleChangeText={handleChangeSearch} 
+          icon={<Octicons name="search" size={20} color="#999999" />}
+          iconPosition="left"
         />
     </AppView>
     )

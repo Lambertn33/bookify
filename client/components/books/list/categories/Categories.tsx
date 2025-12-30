@@ -8,7 +8,7 @@ import Loading from './Loading';
 import Error from './Error';
 import Empty from './Empty';
 
-const Categories = ({ categories, title, isLoading, isError, error, refetch }: CategoriesProps) => {
+const Categories = ({ categories, title, isLoading, isError, error, refetch, selectedCategory, handleSelectCategory }: CategoriesProps) => {
   if (isLoading) {
     return <Loading />;
   }
@@ -26,7 +26,11 @@ const Categories = ({ categories, title, isLoading, isError, error, refetch }: C
       <AppText style={styles.categoriesTitle}>{title}</AppText>
       <FlatList
         data={categories || []}
-        renderItem={({ item }: { item: Category }) => <CategoryItem category={item} />}
+        renderItem={({ item }:
+           { item: Category }) => 
+           <CategoryItem category={item}
+            onPress={() => handleSelectCategory?.(item.id)}
+            isSelected={selectedCategory === item.id} />}
         keyExtractor={(item: Category) => item.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
