@@ -1,14 +1,17 @@
 import { Octicons, FontAwesome5 } from '@expo/vector-icons'
-import { StyleSheet, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { useState } from 'react';
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import {  AppHeader, AppView } from '@/components/ui'
+import {  AppButton, AppHeader, AppText, AppView } from '@/components/ui'
 import { BookItemImage, BookItemHeaderContents, BookItemActions, BookItemDescription } from '@/components/books'
+import { useFetchBook } from '@/hooks/useFetchBook'
 
 const bookItem = () => {
   const router = useRouter()
+  const { bookItem: bookItemId } = useLocalSearchParams()
+  const { book, isLoading, isError, error, refetch } = useFetchBook(Number(bookItemId));
   const [quantity, setQuantity] = useState(2);
 
   const handleBack = () => {
@@ -27,21 +30,18 @@ const bookItem = () => {
     console.log('Add to cart');
   }
 
-  const mockedBook = {
-    id: 2,
-    category_id: 1,
-    title: "All the Light We Cannot See",
-    author: "Anthony Doerr",
-    description: "A beautiful, stunningly ambitious novel about a blind French girl and a German boy whose paths collide in occupied France as both try to survive the devastation of World War II.",
-    price: "15.99",
-    cover_image: "covers/TTW1LKMZYCFTWBG4JERLIKXMT.jpeg",
-    published_year: "2014",
-    cover_image_url: "https://books-store-storage.s3.us-east-2.amazonaws.com/covers/TTW1LKMZYCFTWBG4JERLIKXMT.jpeg",
-    category: {
-      id: 1,
-      name: "Fiction"
-    }
-  };
+  if (isLoading) {
+    return <AppView style={styles.container}>
+      <ActivityIndicator size="small" color="#4B5320" />
+    </AppView>
+  }
+
+  if (isError) {
+    return <AppView style={styles.container}>
+      <AppText>{error?.message}</AppText>
+      <AppButton onPress={() => refetch()}>Retry</AppButton>
+    </AppView>
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -53,19 +53,19 @@ const bookItem = () => {
         />
       </AppView>
 
-      <BookItemImage imageUrl={mockedBook.cover_image_url} />
+      <BookItemImage imageUrl={book!.cover_image_url!} />
 
       <View style={styles.detailsContainer}>
-        <BookItemHeaderContents title={mockedBook.title} author={mockedBook.author} price={mockedBook.price} />
+        <BookItemHeaderContents title={book!.title!} author={book!.author!} price={book!.price!} />
 
         <BookItemDescription
-           description={mockedBook.description}
+           description={book!.description!}
         />
         <BookItemActions
           quantity={quantity}
           handleIncreaseQuantity={handleIncreaseQuantity}
           handleDecreaseQuantity={handleDecreaseQuantity}
-          price={mockedBook.price}
+          price={book!.price!}
           onAddToCart={handleAddToCart}
         />
       </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     position: 'relative',
-    marginTop: -40,
+    marginTop: -90,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
     minHeight: 0,
+    overflow: 'hidden',
   },
   headerContainer: {
     paddingHorizontal: 20,

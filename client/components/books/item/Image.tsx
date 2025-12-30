@@ -1,20 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, ImageBackground } from 'react-native'
 import { AppView } from '@/components/ui'
-import { Image } from 'expo-image'
 
 const BookItemImage = ({ imageUrl }: { imageUrl: string }) => {
   if (!imageUrl) {
     return null;
   }
   return (
-  <AppView style={styles.imageContainer}>
-    <Image 
-      source={{ uri: imageUrl }}  
-      style={styles.image}
-      contentFit="cover"
-    />
-  </AppView>
+    <AppView style={styles.imageContainer}>
+      <ImageBackground
+        source={{ uri: imageUrl }}
+        style={styles.backgroundImage}
+        imageStyle={styles.backgroundImageStyle}
+        resizeMode="cover"
+      >
+      </ImageBackground>
+    </AppView>
   )
 }
 
@@ -23,15 +23,18 @@ export default BookItemImage
 const styles = StyleSheet.create({
   imageContainer: {
     height: 250,
-    paddingHorizontal: 10,
-    paddingTop: 20,
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     backgroundColor: '#e6e6e6',
+    padding: 0
   },
-  image: {
-    width: "70%",
-    height: "80%",
-    borderRadius: 20,
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backgroundImageStyle: {
+    opacity: 0.7,
   },
 })
