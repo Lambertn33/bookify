@@ -1,23 +1,24 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet } from 'react-native'
 import { AppText, AppView } from '@/components/ui'
 import { Octicons } from '@expo/vector-icons'
 
 interface HeaderProps {
   title: string;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
-const Header = ({ title }: HeaderProps) => {
+const AppHeader = ({ title, leftIcon, rightIcon }: HeaderProps) => {
   return (
     <AppView style={styles.headerContainer}>
-    <Octicons name="bell-fill" size={24} color="black" />
-    <AppText style={styles.headerTitle}>{title}</AppText>
-    <Octicons name="filter" size={24} color="black" />
+        {leftIcon && leftIcon}
+        <AppText style={styles.headerTitle}>{title}</AppText>
+        {rightIcon && rightIcon}
   </AppView>
   )
 }
 
-export default Header
+export default AppHeader
 
 const styles = StyleSheet.create({
     headerContainer: {

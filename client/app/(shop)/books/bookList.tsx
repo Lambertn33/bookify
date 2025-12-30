@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Categories, Header, Search, Books } from '@/components/books';
+import { Categories, Search, Books } from '@/components/books';
+import { AppHeader } from '@/components/ui';
 import { useFetchCategories, useFetchBooks } from '@/hooks';
+import { Octicons } from '@expo/vector-icons';
 
 
 const bookList = () => {
@@ -28,7 +30,11 @@ const bookList = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <Header title="Books List" />
+      <AppHeader 
+        title="Books List" 
+        leftIcon={<Octicons name="bell-fill" size={24} color="black" />}
+        rightIcon={<Octicons name="filter" size={24} color="black" />}
+      />
       <Search 
         title="Read your favorite book"
         text="Discover the best books in the world"

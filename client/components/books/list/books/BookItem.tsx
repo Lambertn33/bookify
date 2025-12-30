@@ -1,17 +1,20 @@
-import React from 'react';
-import { AppView, AppTitle, AppText } from '@/components/ui';
-import { StyleSheet } from 'react-native';
+import { AppView, AppText } from '@/components/ui';
+import { Pressable, StyleSheet } from 'react-native';
+import { MaterialIcons, Foundation } from '@expo/vector-icons';
+
 import { Image } from 'expo-image';
 import { IBook } from './types';
+import { Link } from 'expo-router';
 
 interface BookItemProps {
   book: IBook;
 }
 
 const BookItem = ({ book }: BookItemProps) => {
+  
   return (
-    <AppView style={styles.bookContainer}>
-      <AppView style={styles.bookInfoAndImageContainer}>
+    <Link href={`/(shop)/books/${book.id}`} style={styles.bookContainerLink}>
+      <AppView style={styles.bookContainer}>
         <AppView style={styles.bookImageContainer}>
           <Image 
             source={{ uri: book.cover_image_url }}  
@@ -20,30 +23,44 @@ const BookItem = ({ book }: BookItemProps) => {
           />
         </AppView>
         <AppView style={styles.bookInfoContainer}>
-          <AppText style={styles.bookCategory} numberOfLines={1}>{book.category.name}</AppText>
-          <AppTitle style={styles.bookTitle} numberOfLines={2} ellipsizeMode="tail">{book.title}</AppTitle>
-          <AppText style={styles.bookAuthor} numberOfLines={1}>{book.author}</AppText>
+          <AppView style={styles.bookCategoryContainer}>
+            <MaterialIcons name="category" size={14} color="black" />
+            <AppText style={styles.bookCategory} numberOfLines={1}>{book.category.name}</AppText>
+          </AppView>
+          <AppView style={styles.bookTitleContainer}>
+            <MaterialIcons name="book-online" size={18} color="black" />
+            <AppText style={styles.bookTitle} numberOfLines={1} ellipsizeMode="tail">{book.title}</AppText>
+          </AppView>
+          <AppView style={styles.bookAuthorContainer}>
+            <MaterialIcons name="person-outline" size={18} color="black" />
+            <AppText style={styles.bookAuthor} numberOfLines={1}>{book.author}</AppText>
+          </AppView>
+          <AppView style={styles.bookPriceContainer}>
+            <Foundation name="dollar" size={18} color="black" />
+            <AppText style={styles.bookPrice}>${book.price}</AppText>
+          </AppView>
         </AppView>
-      </AppView>
-      <AppView style={styles.bookPriceContainer}>
-        <AppText style={styles.bookPrice}>${book.price}</AppText>
-      </AppView>
     </AppView>
+    </Link>
   );
 };
 
 const styles = StyleSheet.create({
+  bookContainerLink: {
+   marginBottom: 16,
+   cursor: 'pointer',
+  },
   bookContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 15,
     width: '100%',
-    marginTop: 10,
+    height: 140,
+    paddingRight: 16,
     backgroundColor: "#e6e6e6",
     borderRadius: 10,
     overflow: 'hidden',
-    height: 100,
-    paddingRight: 16,
   },
   bookInfoAndImageContainer: {
     flexDirection: 'row',
@@ -54,8 +71,8 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   bookImageContainer: {
-    width: 100,
-    height: 100,
+    width: 140,
+    height: 140,
     overflow: 'hidden',
     elevation: 10,
     flexShrink: 0,
@@ -67,12 +84,18 @@ const styles = StyleSheet.create({
   bookInfoContainer: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    gap: 0,
+    justifyContent: 'space-between',
     flex: 1,
     minWidth: 0,
   },
+  bookCategoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    marginVertical: 0,
+  },
   bookCategory: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: "Poppins_800ExtraBold",
     color: "#4B5320",
   },
@@ -91,17 +114,25 @@ const styles = StyleSheet.create({
   bookPrice: {
     fontSize: 14,
     fontFamily: "Poppins_700Bold",
-    color: "#ffffff",
+    color: "red",
+  },
+  bookTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    marginVertical: 0,
+  },
+  bookAuthorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    marginVertical: 0,
   },
   bookPriceContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: "#000",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    flexShrink: 0,
+    gap: 2,
+    marginVertical: 0,
   },
 });
 
