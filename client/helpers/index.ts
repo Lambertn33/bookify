@@ -1,0 +1,1 @@
+export { handleLogin, handleRegister } from './auth';
