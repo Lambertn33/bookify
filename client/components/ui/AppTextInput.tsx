@@ -8,12 +8,13 @@ interface AppTextInputProps extends Omit<TextInputProps, 'style'> {
   style?: ViewStyle;
   inputStyle?: TextStyle;
   value: string;
+  hasError?: boolean;
   handleChangeText: (text: string) => void;
 }
   
-export default function AppTextInput({ placeholder, value, handleChangeText, icon, iconPosition = 'left', style, inputStyle, ...props }: AppTextInputProps) {
+export default function AppTextInput({ placeholder, value, handleChangeText, icon, iconPosition = 'left', style, inputStyle, hasError = false, ...props }: AppTextInputProps) {
   return (
-    <AppView style={[styles.container, style]}>
+    <AppView style={[styles.container, style, hasError && styles.errorContainer]}>
       {icon && iconPosition === 'left' && icon}
       <TextInput 
         placeholder={placeholder}
@@ -46,5 +47,9 @@ const styles = StyleSheet.create({
     opacity: 0.4,
     lineHeight: 24,
     marginBottom: 6,
+  },
+  errorContainer: {
+    borderWidth: 1,
+    borderColor: "#FF3B30",
   },
 });

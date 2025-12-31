@@ -37,6 +37,7 @@ export default function ShopLayout() {
 
   // Check if we're on the bookItem detail page
   const isBookItemPage = segments.some(segment => segment === '[bookItem]' || segment.includes('bookItem'));
+  const isAuthPage = segments.some(segment => segment === 'auth');
 
   const defaultTabBarStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.75)",
@@ -69,7 +70,7 @@ export default function ShopLayout() {
         headerShown: false,
         tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "#666666",
-        tabBarStyle: isBookItemPage ? hiddenTabBarStyle : defaultTabBarStyle,
+        tabBarStyle: isBookItemPage || isAuthPage ? hiddenTabBarStyle : defaultTabBarStyle,
         tabBarShowLabel: false,
       }}
     >
@@ -83,8 +84,14 @@ export default function ShopLayout() {
       <Tabs.Screen
         name="cart/CartScreen"
         options={{
-          title: "Cart",
-          tabBarIcon: createTabBarIcon({ focused: "cart", unfocused: "cart-outline" }),
+         href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="auth/AuthScreen"
+        options={{
+          title: "Auth",
+          tabBarIcon: createTabBarIcon({ focused: "person", unfocused: "person-outline" }),
         }}
       />
       <Tabs.Screen
