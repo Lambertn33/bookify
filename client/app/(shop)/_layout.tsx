@@ -2,6 +2,8 @@ import { Tabs, useSegments } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComponentProps } from "react";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
 
 type IoniconName = ComponentProps<typeof Ionicons>["name"];
 
@@ -34,10 +36,13 @@ const createTabBarIcon = (iconConfig: TabIconConfig) => {
 export default function ShopLayout() {
   const insets = useSafeAreaInsets();
   const segments = useSegments();
+  const authContext = useContext(AuthContext);
 
   // Check if we're on the bookItem detail page
   const isBookItemPage = segments.some(segment => segment === '[bookItem]' || segment.includes('bookItem'));
   const isAuthPage = segments.some(segment => segment === 'auth');
+  const isAuthenticated = authContext.user !== null && authContext.token !== null;
+  const isProfilePage = segments.some(segment => segment === 'profile');
 
   const defaultTabBarStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.75)",
@@ -88,10 +93,19 @@ export default function ShopLayout() {
         }}
       />
       <Tabs.Screen
+        name="profile/ProfileScreen"
+        options={{
+          title: "Profile",
+          tabBarIcon: createTabBarIcon({ focused: "person", unfocused: "person-outline" }),
+          href: isAuthenticated ? undefined : null,
+        }}
+      />
+      <Tabs.Screen
         name="auth/AuthScreen"
         options={{
           title: "Auth",
           tabBarIcon: createTabBarIcon({ focused: "person", unfocused: "person-outline" }),
+          href: !isAuthenticated ? undefined : null,
         }}
       />
       <Tabs.Screen
