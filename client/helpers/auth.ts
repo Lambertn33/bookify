@@ -1,5 +1,6 @@
 import { login, register } from "@/api";
 import { AxiosResponse } from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface User {
     id: number;
@@ -70,4 +71,20 @@ export const handleRegister = async (names: string, email: string, password: str
         'Registration successful',
         'Registration failed'
     );
+}
+
+export const saveDataToLocalStorage = async(token: string, user: User) => {
+    await AsyncStorage.setItem('token', token);
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+}
+
+export const clearLocalStorage = async() => {
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('user');
+}
+
+export const getDataFromLocalStorage = async() => {
+    const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem('user');
+    return { token, user: user ? JSON.parse(user) : null };
 }

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import AuthForm from "@/components/auth/AuthForm";
-import { handleLogin, handleRegister } from "@/helpers";
+import { handleLogin, handleRegister, saveDataToLocalStorage } from "@/helpers";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "expo-router";
 import { validateEmail, validatePassword, validateConfirmPassword, validateNames, type LoginErrors, type RegisterErrors, emptyLoginErrors, emptyRegisterErrors } from "@/validations";
@@ -176,6 +176,8 @@ const AuthScreen = () => {
         if (response.user && response.token) {
           authContext.setUser(response.user);
           authContext.setToken(response.token);
+          // Save to AsyncStorage
+          await saveDataToLocalStorage(response.token, response.user);
           router.push("/(shop)/books/bookList");
         }
       }

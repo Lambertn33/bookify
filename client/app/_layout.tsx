@@ -13,8 +13,10 @@ import {
 } from "@expo-google-fonts/poppins";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from "@/contexts/AuthContext";
+import { getDataFromLocalStorage } from "@/helpers";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,20 +42,46 @@ export default function RootLayout() {
     Poppins_100Thin,
   });
 
+  const [initialAuthData, setInitialAuthData] = useState<{
+    user: any;
+    token: string | null;
+  } | null>(null);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+
   useEffect(() => {
-    if (fontsLoaded) {
+    const loadAuthData = async () => {
+      try {
+        const { user, token } = await getDataFromLocalStorage();
+        setInitialAuthData({ user: user ? JSON.parse(user) : null, token });
+      } catch (error) {
+        setInitialAuthData({ user: null, token: null });
+      } finally {
+        setIsLoadingAuth(false);
+      }
+    };
+
+    loadAuthData();
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded && !isLoadingAuth) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, isLoadingAuth]);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || isLoadingAuth) {
     return null;
   }
 
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <Stack screenOptions={{ headerShown: false }} />
+        <AuthProvider
+          initialUser={initialAuthData?.user || null}
+          initialToken={initialAuthData?.token || null}
+        >
+          <Stack screenOptions={{ headerShown: false }} />
+        </AuthProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );
