@@ -21,7 +21,3 @@ export default function AppView({
   );
 }
 
-const styles = StyleSheet.create({
-
-});
-
