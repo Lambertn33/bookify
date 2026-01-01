@@ -12,7 +12,7 @@ const CartFooter = ({ grandTotal, onCheckout }: CartFooterProps) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <AppView style={[styles.footerContainer, { paddingBottom: Math.max(insets.bottom, 20) }]}>
+    <AppView style={[styles.footerContainer, { paddingBottom: Math.max(insets.bottom, 20) }]} paddingTop={12} paddingBottom={40}>
       <AppView style={styles.grandTotalContainer}>
         <AppText style={styles.grandTotalLabel}>Grand Total</AppText>
         <AppText style={styles.grandTotalValue}>${grandTotal}</AppText>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   checkoutButton: {
     width: '100%',
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: 99,
   },
   checkoutButtonText: {
     fontSize: 16,

@@ -8,25 +8,11 @@ import { CartContext } from '@/contexts/CartContext'
 import { useRouter } from 'expo-router'
 
 const CartScreen = () => {
-  const { cartItems, removeBookFromCart, updateBookQuantity, getCartTotalPrice } = useContext(CartContext);
+  const { cartItems, getCartTotalPrice } = useContext(CartContext);
   const router = useRouter();
 
   const handleBack = () => {
     router.push('/(shop)/books/bookList');
-  };
-
-  const handleIncreaseQuantity = (id: number) => {
-    const item = cartItems.find(item => item.id === id);
-    if (item) {
-      updateBookQuantity(id, item.quantity + 1);
-    }
-  };
-
-  const handleDecreaseQuantity = (id: number) => {
-    const item = cartItems.find(item => item.id === id);
-    if (item && item.quantity > 1) {
-      updateBookQuantity(id, item.quantity - 1);
-    }
   };
 
   const handleCheckout = () => {
@@ -51,8 +37,6 @@ const CartScreen = () => {
         <>
           <CartItems
             cartItems={cartItems}
-            onIncreaseQuantity={handleIncreaseQuantity}
-            onDecreaseQuantity={handleDecreaseQuantity}
           />
           <CartFooter
             grandTotal={getCartTotalPrice().toFixed(2)}

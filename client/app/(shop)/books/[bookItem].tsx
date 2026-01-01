@@ -12,7 +12,7 @@ import { useFetchBook } from '@/hooks/useFetchBook'
 
 const bookItem = () => {
   const router = useRouter();
-  const { addBookToCart } = useContext(CartContext);
+  const { addBookToCart, getCartItemsCount, cartItems } = useContext(CartContext);
 
   const { bookItem: bookItemId } = useLocalSearchParams();
   const { book, isLoading, isError, error, refetch } = useFetchBook(Number(bookItemId));
@@ -25,6 +25,7 @@ const bookItem = () => {
     router.push('/(shop)/cart/CartScreen');
   }
 
+  const isBookInCart = cartItems.some(item => item.id === book!.id);
 
   const handleAddToCart = async () => {
    try {
@@ -58,7 +59,7 @@ const bookItem = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <AppView style={styles.headerContainer}>
+      <AppView style={styles.headerContainer} paddingTop={12} paddingBottom={20}>
         <AppHeader 
           title="Books Details" 
           leftIcon={<FontAwesome5 name="arrow-left" size={24} color="black" onPress={handleBack} />}
@@ -66,7 +67,7 @@ const bookItem = () => {
             <Pressable onPress={handleCartPress}>
               <AppIconWithBadge 
                 icon={<Ionicons name="cart" size={32} color="black" />} 
-                cartCount={1} 
+                cartCount={getCartItemsCount()} 
               />
             </Pressable>
           }
@@ -75,25 +76,20 @@ const bookItem = () => {
 
       <BookItemImage imageUrl={book!.cover_image_url!} />
 
-      <View style={styles.detailsContainer}>
+      <AppView style={styles.detailsContainer} paddingTop={20}>
         <BookItemHeaderContents title={book!.title!} author={book!.author!} price={book!.price!} />
 
         <BookItemDescription
            description={book!.description!}
         />
-        {/* <BookItemActions
-          quantity={quantity}
-          handleIncreaseQuantity={handleIncreaseQuantity}
-          handleDecreaseQuantity={handleDecreaseQuantity}
-          price={book!.price!}
-          onAddToCart={handleAddToCart}
-        /> */}
-        <AppView style={styles.addToCartContainer}>
-          <AppButton onPress={handleAddToCart} style={styles.addToCartButton}>
-            <AppText style={styles.addToCartText}>Add to cart</AppText>
+        <AppView style={styles.addToCartContainer} paddingBottom={20}>
+          <AppButton
+          disabled={isBookInCart}
+          onPress={handleAddToCart} style={styles.addToCartButton}>
+            <AppText style={styles.addToCartText}>{isBookInCart ? 'Already In Cart' : 'Add to cart'}</AppText>
           </AppButton>
         </AppView>
-      </View>
+      </AppView>
     </SafeAreaView>
   )
 }

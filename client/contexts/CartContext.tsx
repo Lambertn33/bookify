@@ -23,9 +23,9 @@ interface CartContextType {
     removeBookFromCart: (id: number) => Promise<void>;
     updateBookQuantity: (id: number, quantity: number) => Promise<void>;
     clearCart: () => Promise<void>;
-    getCartTotal: () => number;
     getCartItemsCount: () => number;
     getCartTotalPrice: () => number;
+    getCartItemTotalPrice: (id: number) => number;
 }
 
 export const CartContext = createContext<CartContextType>({
@@ -34,9 +34,9 @@ export const CartContext = createContext<CartContextType>({
     removeBookFromCart: async () => {},
     updateBookQuantity: async () => {},
     clearCart: async () => {},
-    getCartTotal: () => 0,
     getCartItemsCount: () => 0,
     getCartTotalPrice: () => 0,
+    getCartItemTotalPrice: () => 0,
 });
 
 export const CartProvider = ({children, initialCartItems}: {children: React.ReactNode, initialCartItems: CartBook[]}) => {
@@ -58,6 +58,12 @@ export const CartProvider = ({children, initialCartItems}: {children: React.Reac
     setCartItems(items);
   }
 
+  const getCartItemTotalPrice = (id: number) => {
+    const item = cartItems.find(item => item.id === id);
+    if (!item) return 0;
+    return Number(item.price) * item.quantity;
+  }
+
   const updateBookQuantity = async(id: number, quantity: number) => {
     await updateBookQuantityInLocalStorage(id, quantity);
     const items = await getCartItemsFromLocalStorage();
@@ -67,10 +73,6 @@ export const CartProvider = ({children, initialCartItems}: {children: React.Reac
   const clearCart = async() => {
     await clearCartInLocalStorage();
     setCartItems([]);
-  }
-
-  const getCartTotal = () => {
-    return cartItems.reduce((total, item) => total + (Number(item.price) * item.quantity), 0);
   }
 
   const getCartItemsCount = () => {
@@ -87,9 +89,9 @@ export const CartProvider = ({children, initialCartItems}: {children: React.Reac
     removeBookFromCart,
     updateBookQuantity,
     clearCart,
-    getCartTotal,
     getCartItemsCount,
     getCartTotalPrice,
+    getCartItemTotalPrice,
   }
 
    return <CartContext.Provider value={values}>{children}</CartContext.Provider>;

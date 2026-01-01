@@ -22,7 +22,6 @@ const CategoryItem = ({ category, onPress, isSelected }: CategoryItemProps) => {
 const styles = StyleSheet.create({
   categoryItem: {
     paddingHorizontal: 10,
-    paddingVertical: 5,
     borderRadius: 99,
     backgroundColor: "#4B5320",
     marginHorizontal: 6,

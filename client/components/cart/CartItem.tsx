@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import React, { useContext } from 'react'
 import { AppView, AppText } from '@/components/ui'
 import { Image } from 'expo-image'
@@ -19,19 +19,25 @@ export interface CartBook {
 interface CartItemProps {
   item: CartBook;
   quantity: number;
-  onIncreaseQuantity: () => void;
-  onDecreaseQuantity: () => void;
 }
 
-const CartItem = ({ item, quantity, onIncreaseQuantity, onDecreaseQuantity }: CartItemProps) => {
+const CartItem = ({ item, quantity }: CartItemProps) => {
   
-  const { removeBookFromCart } = useContext(CartContext);
-  const calculateItemTotal = (price: string, quantity: number) => {
-    return (Number(price) * quantity).toFixed(2);
-  };
+  const { removeBookFromCart, updateBookQuantity, getCartItemTotalPrice } = useContext(CartContext);
 
   const handleRemoveItem = () => {
     removeBookFromCart(item.id);
+    Alert.alert('Item removed from cart', 'Item has been removed from your cart');
+  };
+
+  const handleIncreaseQuantity = () => {
+    updateBookQuantity(item.id, item.quantity + 1);
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (item.quantity > 1) {
+        updateBookQuantity(item.id, item.quantity - 1);
+      }
   };
 
   return (
@@ -45,17 +51,17 @@ const CartItem = ({ item, quantity, onIncreaseQuantity, onDecreaseQuantity }: Ca
           />
         )}
       </AppView>
-      <AppView style={styles.cartItemInfoContainer}>
+      <AppView style={styles.cartItemInfoContainer} paddingTop={12} paddingBottom={12}>
         <AppText style={styles.cartItemTitle} numberOfLines={2}>{item.title}</AppText>
-        <AppText style={styles.cartItemAuthor}>{item.author}</AppText>
+        <AppText style={styles.cartItemAuthor}>by {item.author}</AppText>
         <AppView style={styles.cartItemPriceContainer}>
           <AppText style={styles.cartItemPrice}>${item.price}</AppText>
-          <AppText style={styles.cartItemTotal}>Total: ${calculateItemTotal(item.price, quantity)}</AppText>
+          <AppText style={styles.cartItemTotal}>Total: ${getCartItemTotalPrice(item.id)}</AppText>
         </AppView>
         <CartActions
           quantity={quantity}
-          onIncreaseQuantity={onIncreaseQuantity}
-          onDecreaseQuantity={onDecreaseQuantity}
+          onIncreaseQuantity={handleIncreaseQuantity}
+          onDecreaseQuantity={handleDecreaseQuantity}
           onRemoveItem={handleRemoveItem}
         />
       </AppView>
@@ -68,9 +74,9 @@ export default CartItem;
 const styles = StyleSheet.create({
   cartItemContainer: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 12,
+    // padding: 12,
     marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: {
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
   },
   cartItemImageContainer: {
     width: 100,
-    height: 140,
+    height: '100%',
     borderRadius: 8,
     overflow: 'hidden',
     marginRight: 12,
@@ -95,6 +101,7 @@ const styles = StyleSheet.create({
   cartItemInfoContainer: {
     flex: 1,
     justifyContent: 'space-between',
+    padding: 12,
   },
   cartItemTitle: {
     fontSize: 16,
