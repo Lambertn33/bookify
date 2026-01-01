@@ -1,30 +1,29 @@
 import { Octicons, FontAwesome5 } from '@expo/vector-icons'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import {  AppButton, AppHeader, AppText, AppView } from '@/components/ui'
-import { BookItemImage, BookItemHeaderContents, BookItemActions, BookItemDescription } from '@/components/books'
+import { BookItemImage, BookItemHeaderContents, BookItemDescription } from '@/components/books'
 import { useFetchBook } from '@/hooks/useFetchBook'
 
 const bookItem = () => {
   const router = useRouter()
   const { bookItem: bookItemId } = useLocalSearchParams()
   const { book, isLoading, isError, error, refetch } = useFetchBook(Number(bookItemId));
-  const [quantity, setQuantity] = useState(2);
+  // const [quantity, setQuantity] = useState(2);
 
   const handleBack = () => {
     router.back()
   }
 
-  const handleIncreaseQuantity = () => {
-    setQuantity(prev => prev + 1)
-  }
+  // const handleIncreaseQuantity = () => {
+  //   setQuantity(prev => prev + 1)
+  // }
 
-  const handleDecreaseQuantity = () => {
-    setQuantity(prev => Math.max(1, prev - 1))
-  }
+  // const handleDecreaseQuantity = () => {
+  //   setQuantity(prev => Math.max(1, prev - 1))
+  // }
 
   const handleAddToCart = () => {
     console.log('Add to cart');
@@ -61,13 +60,18 @@ const bookItem = () => {
         <BookItemDescription
            description={book!.description!}
         />
-        <BookItemActions
+        {/* <BookItemActions
           quantity={quantity}
           handleIncreaseQuantity={handleIncreaseQuantity}
           handleDecreaseQuantity={handleDecreaseQuantity}
           price={book!.price!}
           onAddToCart={handleAddToCart}
-        />
+        /> */}
+        <AppView style={styles.addToCartContainer}>
+          <AppButton onPress={handleAddToCart} style={styles.addToCartButton}>
+            <AppText style={styles.addToCartText}>Add to cart</AppText>
+          </AppButton>
+        </AppView>
       </View>
     </SafeAreaView>
   )
@@ -107,5 +111,27 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: 20,
     paddingTop: 10,
+  },
+  addToCartContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 10,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E5E5E5',
+  },
+  addToCartButton: {
+    width: '100%',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+  },
+  addToCartText: {
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#FFFFFF",
   },
 })

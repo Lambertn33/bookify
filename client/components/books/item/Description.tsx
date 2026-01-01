@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingHorizontal: 20,
         paddingTop: 10,
-        paddingBottom: 200, // Space for fixed actions container
+        paddingBottom: 40, // Space for fixed button container
     },
     descriptionContainer: {
         marginVertical: 10,
