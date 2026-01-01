@@ -1,4 +1,4 @@
-import { login, register } from "@/api";
+import { login, register, logout } from "@/api";
 import { AxiosResponse } from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -24,6 +24,7 @@ interface AuthResponseData {
 
 const processAuthResponse = async (
     apiCall: Promise<AxiosResponse<AuthResponseData>>,
+    isLogout: boolean = false,
     defaultSuccessMessage: string,
     defaultFailureMessage: string
 ): Promise<AuthResponse> => {
@@ -34,7 +35,10 @@ const processAuthResponse = async (
         const data = response.data;
         
         if (status === 200) {
-            return {
+            return isLogout ? {
+                message: data.message || defaultSuccessMessage,
+                status: status,
+            } : {
                 message: data.message || defaultSuccessMessage,
                 status: status,
                 user: data.user,
@@ -60,6 +64,7 @@ const processAuthResponse = async (
 export const handleLogin = async (email: string, password: string): Promise<AuthResponse> => {
     return processAuthResponse(
         login({ email, password }),
+        false,
         'Login successful',
         'Login failed'
     );
@@ -68,6 +73,7 @@ export const handleLogin = async (email: string, password: string): Promise<Auth
 export const handleRegister = async (names: string, email: string, password: string): Promise<AuthResponse> => {
     return processAuthResponse(
         register({ names, email, password }),
+        false,
         'Registration successful',
         'Registration failed'
     );
@@ -86,5 +92,23 @@ export const clearLocalStorage = async() => {
 export const getDataFromLocalStorage = async() => {
     const token = await AsyncStorage.getItem('token');
     const user = await AsyncStorage.getItem('user');
-    return { token, user: user ? JSON.parse(user) : null };
+    return { token: token || null, user: user ? JSON.parse(user) : null };
+}
+
+export const handleLogout = async() => {
+    const { token } = await getDataFromLocalStorage();
+    if (token) {
+        await clearLocalStorage();
+        return processAuthResponse(
+            logout(token),
+            true,
+            'Logout successful',
+            'Logout failed'
+        );
+    } else {
+        return {
+            message: 'No token found',
+            status: 401,
+        };
+    }
 }

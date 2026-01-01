@@ -13,7 +13,7 @@ interface AuthContextType {
     token: string | null;
     setUser: (user: User) => void;
     setToken: (token: string) => void;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -21,7 +21,7 @@ export const AuthContext = createContext<AuthContextType>({
     token: null,  
     setUser: () => {},
     setToken: () => {},
-    logout: () => {},
+    logout: async () => {},
 });
 
 export const AuthProvider = ({ 
