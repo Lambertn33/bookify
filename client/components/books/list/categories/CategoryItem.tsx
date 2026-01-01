@@ -12,7 +12,7 @@ interface CategoryItemProps {
 const CategoryItem = ({ category, onPress, isSelected }: CategoryItemProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <AppView style={[styles.categoryItem, isSelected && styles.categoryItemSelected]}>
+      <AppView style={[styles.categoryItem, isSelected && styles.categoryItemSelected]} paddingBottom={4} paddingTop={4}>
         <AppText style={styles.categoryItemText}>{category.name}</AppText>
       </AppView>
     </TouchableOpacity>
@@ -21,7 +21,7 @@ const CategoryItem = ({ category, onPress, isSelected }: CategoryItemProps) => {
 
 const styles = StyleSheet.create({
   categoryItem: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     borderRadius: 99,
     backgroundColor: "#4B5320",
     marginHorizontal: 6,

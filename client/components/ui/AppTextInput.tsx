@@ -14,7 +14,7 @@ interface AppTextInputProps extends Omit<TextInputProps, 'style'> {
   
 export default function AppTextInput({ placeholder, value, handleChangeText, icon, iconPosition = 'left', style, inputStyle, hasError = false, ...props }: AppTextInputProps) {
   return (
-    <AppView style={[styles.container, style, hasError && styles.errorContainer]}>
+    <AppView style={[styles.container, style, hasError && styles.errorContainer]} paddingBottom={12} paddingTop={12}>
       {icon && iconPosition === 'left' && icon}
       <TextInput 
         placeholder={placeholder}

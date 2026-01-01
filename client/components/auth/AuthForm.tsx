@@ -31,7 +31,7 @@ const AuthForm = ({ isLogin, loginState, registerState, handleEmailChange, handl
         <AppTitle style={styles.title}>{isLogin ? 'Welcome Back' : 'Create  an Account'}</AppTitle>
       </AppView>
 
-      <AppView style={styles.form}>
+      <AppView style={styles.form} paddingBottom={20} paddingTop={20}>
         {
           !isLogin && (
             <AppView>
@@ -50,7 +50,7 @@ const AuthForm = ({ isLogin, loginState, registerState, handleEmailChange, handl
             </AppView>
           )
         }
-        <AppView>
+        <AppView paddingBottom={12}>
           <AppTextInput
             placeholder="Email"
             value={isLogin ? loginState.email : registerState.email}
@@ -200,8 +200,8 @@ const styles = StyleSheet.create({
         marginBottom: 0,
       },
       errorText: {
-        fontSize: 12,
-        fontFamily: "Poppins_400Regular",
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
         color: "#FF3B30",
         marginTop: 4,
         marginLeft: 4,

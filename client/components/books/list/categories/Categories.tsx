@@ -22,7 +22,7 @@ const Categories = ({ categories, title, isLoading, isError, error, refetch, sel
   }
 
   return (
-    <AppView style={styles.categoriesContainer}>
+    <AppView style={styles.categoriesContainer} paddingBottom={12} paddingTop={12}>
       <AppText style={styles.categoriesTitle}>{title}</AppText>
       <FlatList
         data={categories || []}
