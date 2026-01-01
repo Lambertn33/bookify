@@ -86,9 +86,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    height: 180,
   },
   cartItemImageContainer: {
-    width: 100,
+    width: 140,
     height: '100%',
     borderRadius: 8,
     overflow: 'hidden',
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   cartItemInfoContainer: {
-    flex: 1,
+    flex: 5,
     justifyContent: 'space-between',
     padding: 12,
   },

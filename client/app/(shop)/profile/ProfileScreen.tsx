@@ -3,14 +3,24 @@ import React, { useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { AppView, AppText, AppButton, AppHeader } from '@/components/ui';
+import { AppView, AppText, AppButton, AppHeader, AppIconWithBadge } from '@/components/ui';
 import { AuthContext } from '@/contexts/AuthContext';
+import { CartContext } from '@/contexts/CartContext';
 import { handleLogout as handleLogoutHelper } from '@/helpers';
 
 const ProfileScreen = () => {
   const authContext = useContext(AuthContext);
+  const cartContext = useContext(CartContext);
   const router = useRouter();
   const { user } = authContext;
+
+  const handleHomePress = () => {
+    router.push('/(shop)/books/bookList');
+  };
+
+  const handleCartPress = () => {
+    router.push('/(shop)/cart/CartScreen');
+  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -28,7 +38,7 @@ const ProfileScreen = () => {
             const response = await handleLogoutHelper();
             if (response.status === 200) {
               await authContext.logout();
-              router.replace('/(shop)/auth/AuthScreen');
+              router.replace('/(shop)/books/bookList');
             } else {
               Alert.alert('Error', response.message);
             }
@@ -50,15 +60,26 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <AppView style={styles.headerSection}>
-          <AppHeader title="Profile" />
-        </AppView>
-
-        <AppView style={styles.profileSection}>
+      <AppView style={styles.headerSection}>
+          <AppHeader 
+            title="Profile" 
+            leftIcon={
+              <Pressable onPress={handleHomePress}>
+                <Ionicons name="home" size={32} color="black" />
+              </Pressable>
+            }
+            rightIcon={
+              <Pressable onPress={handleCartPress}>
+                <AppIconWithBadge 
+                  icon={<Ionicons name="cart" size={32} color="black" />} 
+                  cartCount={cartContext.getCartItemsCount()} 
+                />
+              </Pressable>
+            }
+          />
+      </AppView>
+      <AppView style={styles.scrollContent}>
+        <AppView style={styles.profileSection} paddingBottom={100} paddingTop={100}>
           <AppView style={styles.avatarContainer}>
             <AppView style={styles.avatar}>
               <Ionicons name="person" size={50} color="#FFFFFF" />
@@ -82,9 +103,16 @@ const ProfileScreen = () => {
             </AppView>
             <Ionicons name="chevron-forward" size={20} color="#999999" />
           </Pressable>
+          <Pressable style={styles.menuItem}>
+            <AppView style={styles.menuItemContent}>
+              <Ionicons name="heart-outline" size={24} color="#000000" />
+              <AppText style={styles.menuItemText}>My Favorites</AppText>
+            </AppView>
+            <Ionicons name="chevron-forward" size={20} color="#999999" />
+          </Pressable>
         </AppView>
 
-        <AppView style={styles.logoutSection}>
+        <AppView style={styles.logoutSection} paddingTop={20}>
           <AppButton
             style={styles.logoutButton}
             onPress={handleLogout}
@@ -93,7 +121,7 @@ const ProfileScreen = () => {
             <AppText style={styles.logoutButtonText}>Logout</AppText>
           </AppButton>
         </AppView>
-      </ScrollView>
+      </AppView>
     </SafeAreaView>
   );
 };
@@ -138,9 +166,10 @@ const styles = StyleSheet.create({
   userInfoContainer: {
     alignItems: 'center',
     gap: 8,
+    marginTop: 16,
   },
   userName: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Poppins_700Bold',
     color: '#000000',
     textAlign: 'center',
@@ -168,7 +197,7 @@ const styles = StyleSheet.create({
   menuSection: {
     paddingHorizontal: 24,
     marginTop: 8,
-    gap: 8,
+    gap: 16,
   },
   menuItem: {
     flexDirection: 'row',

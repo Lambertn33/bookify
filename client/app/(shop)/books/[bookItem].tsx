@@ -25,7 +25,9 @@ const bookItem = () => {
     router.push('/(shop)/cart/CartScreen');
   }
 
-  const isBookInCart = cartItems.some(item => item.id === book!.id);
+  const isBookInCart = book?.id && Array.isArray(cartItems) 
+    ? cartItems.some(item => item?.id === book.id) 
+    : false;
 
   const handleAddToCart = async () => {
    try {
