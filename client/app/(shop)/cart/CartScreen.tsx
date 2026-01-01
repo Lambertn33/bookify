@@ -1,14 +1,14 @@
 import { StyleSheet } from 'react-native'
 import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { FontAwesome5 } from '@expo/vector-icons'
-import { AppView, AppText, AppHeader } from '@/components/ui'
+import { FontAwesome5, Ionicons } from '@expo/vector-icons'
+import { AppView, AppText, AppHeader, AppIconWithBadge } from '@/components/ui'
 import { CartItems, CartFooter } from '@/components/cart'
 import { CartContext } from '@/contexts/CartContext'
 import { useRouter } from 'expo-router'
 
 const CartScreen = () => {
-  const { cartItems, getCartTotalPrice } = useContext(CartContext);
+  const { cartItems, getCartTotalPrice, getCartItemsCount } = useContext(CartContext);
   const router = useRouter();
 
   const handleBack = () => {
@@ -25,7 +25,12 @@ const CartScreen = () => {
       <AppHeader 
           title="My Shopping Cart" 
           leftIcon={<FontAwesome5 name="arrow-left" size={24} color="black" onPress={handleBack} />}
-          rightIcon={null}
+          rightIcon={
+            <AppIconWithBadge 
+            icon={<Ionicons name="cart" size={32} color="black" />} 
+            cartCount={getCartItemsCount()} 
+          />
+          }
         />
       </AppView>
       
