@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons'
 
 interface MenuSection {
     title: string;
-    icon: React.ReactNode;
+    icon: React.JSX.Element;
     onPress: () => void;
   }
 
