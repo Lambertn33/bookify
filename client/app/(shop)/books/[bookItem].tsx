@@ -1,9 +1,9 @@
-import { Octicons, FontAwesome5 } from '@expo/vector-icons'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import {  FontAwesome5, Ionicons } from '@expo/vector-icons'
+import { ActivityIndicator, StyleSheet, View, Pressable } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import {  AppButton, AppHeader, AppText, AppView } from '@/components/ui'
+import {  AppButton, AppHeader, AppText, AppView, AppIconWithBadge } from '@/components/ui'
 import { BookItemImage, BookItemHeaderContents, BookItemDescription } from '@/components/books'
 import { useFetchBook } from '@/hooks/useFetchBook'
 
@@ -15,6 +15,10 @@ const bookItem = () => {
 
   const handleBack = () => {
     router.back()
+  }
+
+  const handleCartPress = () => {
+    router.push('/(shop)/cart/CartScreen');
   }
 
   // const handleIncreaseQuantity = () => {
@@ -48,7 +52,14 @@ const bookItem = () => {
         <AppHeader 
           title="Books Details" 
           leftIcon={<FontAwesome5 name="arrow-left" size={24} color="black" onPress={handleBack} />}
-          rightIcon={<Octicons name="filter" size={24} color="black" />}
+          rightIcon={
+            <Pressable onPress={handleCartPress}>
+              <AppIconWithBadge 
+                icon={<Ionicons name="cart" size={32} color="black" />} 
+                cartCount={1} 
+              />
+            </Pressable>
+          }
         />
       </AppView>
 

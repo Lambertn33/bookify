@@ -1,13 +1,15 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Pressable } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Categories, Search, Books } from '@/components/books';
-import { AppHeader, AppIconWithBadge } from '@/components/ui';
+import { AppHeader, AppIconWithBadge, AppView } from '@/components/ui';
 import { useFetchCategories, useFetchBooks } from '@/hooks';
-import { Ionicons, Octicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'expo-router';
 
 
 const bookList = () => {
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -26,6 +28,10 @@ const bookList = () => {
 
   const handleSelectCategory = (categoryId: number) => {
     setSelectedCategory(prev => prev === categoryId ? null : categoryId);
+  };
+
+  const handleCartPress = () => {
+    router.push('/(shop)/cart/CartScreen');
   };
   const { 
     data: categories,
@@ -50,20 +56,25 @@ const bookList = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <AppHeader 
-        title="Books List" 
-        leftIcon={
-          <AppIconWithBadge 
-            icon={<MaterialIcons name="favorite-border" size={32} color="black" />} 
-            cartCount={1} 
-          />
-        }
-        rightIcon={
-          <AppIconWithBadge 
-            icon={<Ionicons name="cart" size={32} color="black" />} 
-            cartCount={1} 
-          />}
-      />
+      <AppView style={styles.headerWrapper}>
+        <AppHeader 
+          title="Books List" 
+          leftIcon={
+            <AppIconWithBadge 
+              icon={<MaterialIcons name="favorite-border" size={32} color="black" />} 
+              cartCount={1} 
+            />
+          }
+          rightIcon={
+            <Pressable onPress={handleCartPress}>
+              <AppIconWithBadge 
+                icon={<Ionicons name="cart" size={32} color="black" />} 
+                cartCount={1} 
+              />
+            </Pressable>
+          }
+        />
+      </AppView>
       <Search 
         title="Read your favorite book"
         text="Discover the best books in the world"
@@ -104,7 +115,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingTop: 0,
+    paddingBottom: 10,
+  },
+  headerWrapper: {
+    marginTop: 0,
+    marginBottom: 0,
   },
 });
 

@@ -10,7 +10,7 @@ const CONTENT_HEIGHT = SCREEN_HEIGHT * 0.5;
 
 export default function HomeScreen() {
   return (
-    <AppView style={styles.container}>
+    <AppView style={styles.container} paddingTop={-1}>
       <View style={styles.imageContainer}>
         <Image
           source={require("../assets/images/reading.jpg")}
@@ -47,6 +47,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 0,
     backgroundColor: "#FFFFFF",
   },
   imageContainer: {
