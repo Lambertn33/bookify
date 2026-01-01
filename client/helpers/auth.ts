@@ -84,7 +84,7 @@ export const saveDataToLocalStorage = async(token: string, user: User) => {
     await AsyncStorage.setItem('user', JSON.stringify(user));
 }
 
-export const clearLocalStorage = async() => {
+export const clearAuthLocalStorage = async() => {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('user');
 }
@@ -98,7 +98,7 @@ export const getDataFromLocalStorage = async() => {
 export const handleLogout = async() => {
     const { token } = await getDataFromLocalStorage();
     if (token) {
-        await clearLocalStorage();
+        await clearAuthLocalStorage();
         return processAuthResponse(
             logout(token),
             true,

@@ -16,7 +16,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from "@/contexts/AuthContext";
-import { getDataFromLocalStorage } from "@/helpers";
+import { CartProvider } from "@/contexts/CartContext";
+import { getCartItemsFromLocalStorage, getDataFromLocalStorage } from "@/helpers";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,15 +47,20 @@ export default function RootLayout() {
     user: any;
     token: string | null;
   } | null>(null);
+  const [initialCartItems, setInitialCartItems] = useState<any[]>([]);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
   useEffect(() => {
     const loadAuthData = async () => {
       try {
         const { user, token } = await getDataFromLocalStorage();
+        const cartItems = await getCartItemsFromLocalStorage();
         setInitialAuthData({ user: user ? JSON.parse(user) : null, token });
+        setInitialCartItems(cartItems);
+
       } catch (error) {
         setInitialAuthData({ user: null, token: null });
+        setInitialCartItems([]);
       } finally {
         setIsLoadingAuth(false);
       }
@@ -76,12 +82,14 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider
-          initialUser={initialAuthData?.user || null}
-          initialToken={initialAuthData?.token || null}
-        >
-          <Stack screenOptions={{ headerShown: false }} />
-        </AuthProvider>
+        <CartProvider initialCartItems={initialCartItems}>
+          <AuthProvider
+            initialUser={initialAuthData?.user || null}
+            initialToken={initialAuthData?.token || null}
+          >
+            <Stack screenOptions={{ headerShown: false }} />
+          </AuthProvider>
+        </CartProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

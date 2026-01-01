@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { clearLocalStorage } from "@/helpers";
+import { clearAuthLocalStorage } from "@/helpers";
 
 interface User {
     id: number;
@@ -47,7 +47,7 @@ export const AuthProvider = ({
     const handleLogout = async () => {
         setUser(null);
         setToken(null);
-        await clearLocalStorage();
+        await clearAuthLocalStorage();
     }
 
     return <AuthContext.Provider value={{ user, token, setUser: handleSetUser, setToken: handleSetToken, logout: handleLogout }}>{children}</AuthContext.Provider>;

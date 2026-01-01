@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { StyleSheet, Pressable } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Categories, Search, Books } from '@/components/books';
@@ -6,6 +7,7 @@ import { useFetchCategories, useFetchBooks } from '@/hooks';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
+import { CartContext } from '@/contexts/CartContext';
 
 
 const bookList = () => {
@@ -13,6 +15,8 @@ const bookList = () => {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  const { getCartItemsCount } = useContext(CartContext);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -33,6 +37,8 @@ const bookList = () => {
   const handleCartPress = () => {
     router.push('/(shop)/cart/CartScreen');
   };
+
+  console.log('getCartItemsCount', getCartItemsCount());
   const { 
     data: categories,
     isLoading: isCategoriesLoading,
@@ -69,7 +75,7 @@ const bookList = () => {
             <Pressable onPress={handleCartPress}>
               <AppIconWithBadge 
                 icon={<Ionicons name="cart" size={32} color="black" />} 
-                cartCount={1} 
+                cartCount={getCartItemsCount()} 
               />
             </Pressable>
           }

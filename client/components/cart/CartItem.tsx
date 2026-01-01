@@ -9,7 +9,8 @@ export interface CartBook {
   title: string;
   author: string;
   price: string;
-  cover_image_url: string;
+  cover_image_url?: string;
+  quantity: number;
 }
 
 interface CartItemProps {
@@ -28,11 +29,13 @@ const CartItem = ({ item, quantity, onIncreaseQuantity, onDecreaseQuantity, onRe
   return (
     <AppView style={styles.cartItemContainer}>
       <AppView style={styles.cartItemImageContainer}>
-        <Image
-          source={{ uri: item.cover_image_url }}
-          style={styles.cartItemImage}
-          contentFit="cover"
-        />
+        {item.cover_image_url && (
+          <Image
+            source={{ uri: item.cover_image_url }}
+            style={styles.cartItemImage}
+            contentFit="cover"
+          />
+        )}
       </AppView>
       <AppView style={styles.cartItemInfoContainer}>
         <AppText style={styles.cartItemTitle} numberOfLines={2}>{item.title}</AppText>

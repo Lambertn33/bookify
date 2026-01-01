@@ -10,9 +10,9 @@ const AppIconWithBadge = ({ icon, cartCount }: AppIconWithBadgeProps) => {
   return (
     <View style={styles.container}>
       {icon}
-      {cartCount > 0 && <View style={styles.badge}>
+      <View style={styles.badge}>
         <Text style={styles.badgeText}>{cartCount}</Text>
-      </View>}
+      </View>
     </View>
   )
 }

@@ -1,17 +1,21 @@
 import {  FontAwesome5, Ionicons } from '@expo/vector-icons'
-import { ActivityIndicator, StyleSheet, View, Pressable } from 'react-native'
+import { ActivityIndicator, StyleSheet, View, Pressable, Alert } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+
+import { CartContext } from '@/contexts/CartContext'
+import { useContext } from 'react'
 
 import {  AppButton, AppHeader, AppText, AppView, AppIconWithBadge } from '@/components/ui'
 import { BookItemImage, BookItemHeaderContents, BookItemDescription } from '@/components/books'
 import { useFetchBook } from '@/hooks/useFetchBook'
 
 const bookItem = () => {
-  const router = useRouter()
-  const { bookItem: bookItemId } = useLocalSearchParams()
+  const router = useRouter();
+  const { addBookToCart } = useContext(CartContext);
+
+  const { bookItem: bookItemId } = useLocalSearchParams();
   const { book, isLoading, isError, error, refetch } = useFetchBook(Number(bookItemId));
-  // const [quantity, setQuantity] = useState(2);
 
   const handleBack = () => {
     router.back()
@@ -21,16 +25,22 @@ const bookItem = () => {
     router.push('/(shop)/cart/CartScreen');
   }
 
-  // const handleIncreaseQuantity = () => {
-  //   setQuantity(prev => prev + 1)
-  // }
 
-  // const handleDecreaseQuantity = () => {
-  //   setQuantity(prev => Math.max(1, prev - 1))
-  // }
-
-  const handleAddToCart = () => {
-    console.log('Add to cart');
+  const handleAddToCart = async () => {
+   try {
+    await addBookToCart({
+      id: book!.id!,
+      title: book!.title!,
+      author: book!.author!,
+      price: book!.price!,
+      cover_image_url: book!.cover_image_url!,
+      quantity: 1,
+    });
+    Alert.alert('Book added to cart');
+    router.push('/(shop)/books/bookList');
+   } catch (error) {
+    Alert.alert('Error adding book to cart');
+   }
   }
 
   if (isLoading) {

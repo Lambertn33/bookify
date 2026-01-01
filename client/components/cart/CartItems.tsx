@@ -5,7 +5,6 @@ import CartItem, { CartBook } from './CartItem'
 
 interface CartItemsProps {
   cartItems: CartBook[];
-  quantities: Record<number, number>;
   onIncreaseQuantity: (id: number) => void;
   onDecreaseQuantity: (id: number) => void;
   onRemoveItem: (id: number) => void;
@@ -13,7 +12,6 @@ interface CartItemsProps {
 
 const CartItems = ({ 
   cartItems, 
-  quantities, 
   onIncreaseQuantity, 
   onDecreaseQuantity, 
   onRemoveItem 
@@ -21,11 +19,10 @@ const CartItems = ({
   const insets = useSafeAreaInsets();
 
   const renderCartItem = ({ item }: { item: CartBook }) => {
-    const quantity = quantities[item.id] || 1;
     return (
       <CartItem
         item={item}
-        quantity={quantity}
+        quantity={item.quantity}
         onIncreaseQuantity={() => onIncreaseQuantity(item.id)}
         onDecreaseQuantity={() => onDecreaseQuantity(item.id)}
         onRemoveItem={() => onRemoveItem(item.id)}
