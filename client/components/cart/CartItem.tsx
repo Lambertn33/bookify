@@ -1,8 +1,11 @@
 import { StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { AppView, AppText } from '@/components/ui'
 import { Image } from 'expo-image'
 import CartActions from './CartActions'
+import { CartContext } from '@/contexts/CartContext'
+
+
 
 export interface CartBook {
   id: number;
@@ -18,12 +21,17 @@ interface CartItemProps {
   quantity: number;
   onIncreaseQuantity: () => void;
   onDecreaseQuantity: () => void;
-  onRemoveItem: () => void;
 }
 
-const CartItem = ({ item, quantity, onIncreaseQuantity, onDecreaseQuantity, onRemoveItem }: CartItemProps) => {
+const CartItem = ({ item, quantity, onIncreaseQuantity, onDecreaseQuantity }: CartItemProps) => {
+  
+  const { removeBookFromCart } = useContext(CartContext);
   const calculateItemTotal = (price: string, quantity: number) => {
     return (Number(price) * quantity).toFixed(2);
+  };
+
+  const handleRemoveItem = () => {
+    removeBookFromCart(item.id);
   };
 
   return (
@@ -48,7 +56,7 @@ const CartItem = ({ item, quantity, onIncreaseQuantity, onDecreaseQuantity, onRe
           quantity={quantity}
           onIncreaseQuantity={onIncreaseQuantity}
           onDecreaseQuantity={onDecreaseQuantity}
-          onRemoveItem={onRemoveItem}
+          onRemoveItem={handleRemoveItem}
         />
       </AppView>
     </AppView>

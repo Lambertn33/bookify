@@ -51,6 +51,10 @@ export const CartProvider = ({children, initialCartItems}: {children: React.Reac
   const removeBookFromCart = async(id: number) => {
     await removeBookFromCartInLocalStorage(id);
     const items = await getCartItemsFromLocalStorage();
+    if (items.length === 0) {
+        await clearCart();
+        return;
+    }
     setCartItems(items);
   }
 

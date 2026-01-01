@@ -1,20 +1,19 @@
 import { StyleSheet, FlatList } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import CartItem, { CartBook } from './CartItem'
+import { CartContext } from '@/contexts/CartContext'
 
 interface CartItemsProps {
   cartItems: CartBook[];
   onIncreaseQuantity: (id: number) => void;
   onDecreaseQuantity: (id: number) => void;
-  onRemoveItem: (id: number) => void;
 }
 
 const CartItems = ({ 
   cartItems, 
   onIncreaseQuantity, 
   onDecreaseQuantity, 
-  onRemoveItem 
 }: CartItemsProps) => {
   const insets = useSafeAreaInsets();
 
@@ -25,7 +24,6 @@ const CartItems = ({
         quantity={item.quantity}
         onIncreaseQuantity={() => onIncreaseQuantity(item.id)}
         onDecreaseQuantity={() => onDecreaseQuantity(item.id)}
-        onRemoveItem={() => onRemoveItem(item.id)}
       />
     );
   };

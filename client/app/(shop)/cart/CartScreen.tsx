@@ -29,10 +29,6 @@ const CartScreen = () => {
     }
   };
 
-  const handleRemoveItem = (id: number) => {
-    removeBookFromCart(id);
-  };
-
   const handleCheckout = () => {
     console.log('Proceed to checkout');
   };
@@ -57,7 +53,6 @@ const CartScreen = () => {
             cartItems={cartItems}
             onIncreaseQuantity={handleIncreaseQuantity}
             onDecreaseQuantity={handleDecreaseQuantity}
-            onRemoveItem={handleRemoveItem}
           />
           <CartFooter
             grandTotal={getCartTotalPrice().toFixed(2)}
