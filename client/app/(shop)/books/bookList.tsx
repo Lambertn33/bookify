@@ -38,7 +38,6 @@ const bookList = () => {
     router.push('/(shop)/cart/CartScreen');
   };
 
-  console.log('getCartItemsCount', getCartItemsCount());
   const { 
     data: categories,
     isLoading: isCategoriesLoading,

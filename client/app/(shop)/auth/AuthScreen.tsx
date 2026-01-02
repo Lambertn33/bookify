@@ -167,7 +167,6 @@ const AuthScreen = () => {
 
   // ---------- Actions ----------
   const handleLoginAction = useCallback(async () => {
-    // console.log("Login:", { email: loginState.email, password: loginState.password });
     try {
       const response = await handleLogin(loginState.email, loginState.password);
       if (response.status !== 200) {

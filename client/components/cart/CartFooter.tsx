@@ -6,9 +6,10 @@ import { AppView, AppText, AppButton } from '@/components/ui'
 interface CartFooterProps {
   grandTotal: string;
   onCheckout?: () => void;
+  isLoggedIn: boolean;
 }
 
-const CartFooter = ({ grandTotal, onCheckout }: CartFooterProps) => {
+const CartFooter = ({ grandTotal, onCheckout, isLoggedIn }: CartFooterProps) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -17,8 +18,8 @@ const CartFooter = ({ grandTotal, onCheckout }: CartFooterProps) => {
         <AppText style={styles.grandTotalLabel}>Grand Total</AppText>
         <AppText style={styles.grandTotalValue}>${grandTotal}</AppText>
       </AppView>
-      <AppButton style={styles.checkoutButton} onPress={onCheckout}>
-        <AppText style={styles.checkoutButtonText}>Proceed to Checkout</AppText>
+      <AppButton disabled={!isLoggedIn} style={styles.checkoutButton} onPress={onCheckout}>
+        <AppText style={styles.checkoutButtonText}>{isLoggedIn ? 'Proceed to Checkout' : 'Login to Checkout'}</AppText>
       </AppButton>
     </AppView>
   );

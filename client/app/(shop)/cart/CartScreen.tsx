@@ -5,11 +5,16 @@ import { FontAwesome5, Ionicons } from '@expo/vector-icons'
 import { AppView, AppText, AppHeader, AppIconWithBadge } from '@/components/ui'
 import { CartItems, CartFooter } from '@/components/cart'
 import { CartContext } from '@/contexts/CartContext'
+import { AuthContext } from '@/contexts/AuthContext'
 import { useRouter } from 'expo-router'
 
 const CartScreen = () => {
   const { cartItems, getCartTotalPrice, getCartItemsCount } = useContext(CartContext);
   const router = useRouter();
+  const { user } = useContext(AuthContext);
+
+  const isLoggedIn = user !== null;
+  console.log('isLoggedIn', isLoggedIn);
 
   const handleBack = () => {
     router.push('/(shop)/books/bookList');
@@ -46,6 +51,7 @@ const CartScreen = () => {
           <CartFooter
             grandTotal={getCartTotalPrice().toFixed(2)}
             onCheckout={handleCheckout}
+            isLoggedIn={isLoggedIn}
           />
         </>
       )}
