@@ -13,6 +13,9 @@ interface LoginRequest {
 
 interface RegisterRequest extends LoginRequest {
     names: string;
+    phone: string;
+    address: string;
+    city: string;
 }
 
 export const register = async (request: RegisterRequest) => {

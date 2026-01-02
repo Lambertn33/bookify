@@ -15,6 +15,9 @@ interface AuthFormProps {
   handlePasswordChange: (text: string) => void;
   handleConfirmPasswordChange: (text: string) => void;
   handleNamesChange: (text: string) => void;
+  handlePhoneChange: (text: string) => void;
+  handleAddressChange: (text: string) => void;
+  handleCityChange: (text: string) => void;
   handleClearErrors: () => void;
   handleLogin: () => void;
   handleRegister: () => void;
@@ -23,7 +26,7 @@ interface AuthFormProps {
   setShowPassword: (showPassword: boolean) => void;
 }
 
-const AuthForm = ({ isLogin, loginState, registerState, handleEmailChange, handlePasswordChange, handleConfirmPasswordChange, handleNamesChange, handleClearErrors, handleLogin, handleRegister, isFormValid, setIsLogin, setShowPassword, showPassword }: AuthFormProps) => {
+const AuthForm = ({ isLogin, loginState, registerState, handleEmailChange, handlePasswordChange, handleConfirmPasswordChange, handleNamesChange, handlePhoneChange, handleAddressChange, handleCityChange, handleClearErrors, handleLogin, handleRegister, isFormValid, setIsLogin, setShowPassword, showPassword }: AuthFormProps) => {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
     <ScrollView contentContainerStyle={styles.content}>
@@ -69,6 +72,56 @@ const AuthForm = ({ isLogin, loginState, registerState, handleEmailChange, handl
             </AppText>
           ) : null}
         </AppView>
+
+        {!isLogin && (
+          <>
+            <AppView paddingBottom={12}>
+              <AppTextInput
+                placeholder="Phone Number"
+                value={registerState.phone}
+                handleChangeText={handlePhoneChange}
+                icon={<Ionicons name="call-outline" size={20} color="#666666" />}
+                iconPosition="left"
+                keyboardType="phone-pad"
+                hasError={!!registerState.errors.phone}
+                style={styles.input}
+              />
+              {registerState.errors.phone ? (
+                <AppText style={styles.errorText}>{registerState.errors.phone}</AppText>
+              ) : null}
+            </AppView>
+
+            <AppView paddingBottom={12}>
+              <AppTextInput
+                placeholder="Address"
+                value={registerState.address}
+                handleChangeText={handleAddressChange}
+                icon={<Ionicons name="location-outline" size={20} color="#666666" />}
+                iconPosition="left"
+                hasError={!!registerState.errors.address}
+                style={styles.input}
+              />
+              {registerState.errors.address ? (
+                <AppText style={styles.errorText}>{registerState.errors.address}</AppText>
+              ) : null}
+            </AppView>
+
+            <AppView paddingBottom={12}>
+              <AppTextInput
+                placeholder="City"
+                value={registerState.city}
+                handleChangeText={handleCityChange}
+                icon={<Ionicons name="business-outline" size={20} color="#666666" />}
+                iconPosition="left"
+                hasError={!!registerState.errors.city}
+                style={styles.input}
+              />
+              {registerState.errors.city ? (
+                <AppText style={styles.errorText}>{registerState.errors.city}</AppText>
+              ) : null}
+            </AppView>
+          </>
+        )}
 
         <AppView>
           <AppView style={styles.passwordContainer}>

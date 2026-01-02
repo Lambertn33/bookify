@@ -74,9 +74,9 @@ export const handleLogin = async (email: string, password: string): Promise<Auth
     );
 }
 
-export const handleRegister = async (names: string, email: string, password: string): Promise<AuthResponse> => {
+export const handleRegister = async (names: string, email: string, phone: string, address: string, city: string, password: string): Promise<AuthResponse> => {
     return processAuthResponse(
-        register({ names, email, password }),
+        register({ names, email, phone, address, city, password }),
         false,
         'Registration successful',
         'Registration failed'

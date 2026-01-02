@@ -3,7 +3,7 @@ import AuthForm from "@/components/auth/AuthForm";
 import { handleLogin, handleRegister, saveDataToLocalStorage } from "@/helpers";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "expo-router";
-import { validateEmail, validatePassword, validateConfirmPassword, validateNames, type LoginErrors, type RegisterErrors, emptyLoginErrors, emptyRegisterErrors } from "@/validations";
+import { validateEmail, validatePassword, validateConfirmPassword, validateNames, validatePhone, validateAddress, validateCity, type LoginErrors, type RegisterErrors, emptyLoginErrors, emptyRegisterErrors } from "@/validations";
 
 
 type LoginState = {
@@ -16,6 +16,9 @@ type LoginState = {
 type RegisterState = {
   names: string;
   email: string;
+  phone: string;
+  address: string;
+  city: string;
   password: string;
   confirmPassword: string;
   errors: RegisterErrors;
@@ -35,6 +38,9 @@ const AuthScreen = () => {
   const [registerState, setRegisterState] = useState<RegisterState>({
     names: "",
     email: "",
+    phone: "",
+    address: "",
+    city: "",
     password: "",
     confirmPassword: "",
     errors: emptyRegisterErrors,
@@ -132,6 +138,33 @@ const AuthScreen = () => {
     [patchRegister, patchRegisterErrors, validateNames]
   );
 
+  const handlePhoneChange = useCallback(
+    (text: string) => {
+      const phoneError = validatePhone(text);
+      patchRegister({ phone: text });
+      patchRegisterErrors({ phone: phoneError });
+    },
+    [patchRegister, patchRegisterErrors, validatePhone]
+  );
+
+  const handleAddressChange = useCallback(
+    (text: string) => {
+      const addressError = validateAddress(text);
+      patchRegister({ address: text });
+      patchRegisterErrors({ address: addressError });
+    },
+    [patchRegister, patchRegisterErrors, validateAddress]
+  );
+
+  const handleCityChange = useCallback(
+    (text: string) => {
+      const cityError = validateCity(text);
+      patchRegister({ city: text });
+      patchRegisterErrors({ city: cityError });
+    },
+    [patchRegister, patchRegisterErrors, validateCity]
+  );
+
   const handleClearErrors = useCallback(() => {
     patchLoginErrors(emptyLoginErrors);
     patchRegisterErrors(emptyRegisterErrors);
@@ -145,6 +178,12 @@ const AuthScreen = () => {
       !registerState.errors.names &&
       registerState.email.length > 0 &&
       !registerState.errors.email &&
+      registerState.phone.length > 0 &&
+      !registerState.errors.phone &&
+      registerState.address.length > 0 &&
+      !registerState.errors.address &&
+      registerState.city.length > 0 &&
+      !registerState.errors.city &&
       registerState.password.length > 0 &&
       !registerState.errors.password &&
       registerState.confirmPassword.length > 0 &&
@@ -190,8 +229,14 @@ const AuthScreen = () => {
 
   const handleRegisterAction = useCallback(async () => {
     try {
-      const response = await handleRegister(registerState.names, registerState.email, registerState.password);
-      console.log("Register response:", response);
+      const response = await handleRegister(
+        registerState.names,
+        registerState.email,
+        registerState.phone,
+        registerState.address,
+        registerState.city,
+        registerState.password
+      );
       if (response.status !== 200) {
         patchRegisterErrors({ email: response.message });
       } else {
@@ -200,7 +245,7 @@ const AuthScreen = () => {
     } catch (error: any) {
       console.error("Register error:", error.message);
     }
-  }, [registerState.names, registerState.email, registerState.password, patchRegisterErrors]);
+  }, [registerState.names, registerState.email, registerState.phone, registerState.address, registerState.city, registerState.password, patchRegisterErrors]);
 
   return (
     <AuthForm
@@ -212,6 +257,9 @@ const AuthScreen = () => {
       handlePasswordChange={handlePasswordChange}
       handleConfirmPasswordChange={handleConfirmPasswordChange}
       handleNamesChange={handleNamesChange}
+      handlePhoneChange={handlePhoneChange}
+      handleAddressChange={handleAddressChange}
+      handleCityChange={handleCityChange}
       handleClearErrors={handleClearErrors}
       handleLogin={handleLoginAction}
       handleRegister={handleRegisterAction}
