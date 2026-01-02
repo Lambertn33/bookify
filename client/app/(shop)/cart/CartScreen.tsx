@@ -20,7 +20,7 @@ const CartScreen = () => {
   };
 
   const handleCheckout = () => {
-    router.push('/(shop)/orders/OrdersScreen');
+    router.push('/(shop)/checkout/CheckoutScreen');
   };
 
   return (

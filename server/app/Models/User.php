@@ -153,6 +153,6 @@ class User extends Authenticatable implements FilamentUser
      */
     public function client(): HasOne
     {
-        return $this->hasOne(User::class, 'user_id', 'id');
+        return $this->hasOne(Client::class, 'user_id', 'id');
     }
 }

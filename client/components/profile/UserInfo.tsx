@@ -10,7 +10,7 @@ interface UserInfoProps {
 
 const UserInfo = ({ names, email, role }: UserInfoProps) => {
   return (
-    <AppView style={styles.profileSection} paddingBottom={100} paddingTop={100}>
+    <AppView style={styles.profileSection} paddingBottom={20} paddingTop={20}>
     <AppView style={styles.avatarContainer}>
       <AppView style={styles.avatar}>
         <Ionicons name="person" size={50} color="#FFFFFF" />

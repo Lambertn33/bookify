@@ -10,6 +10,7 @@ type LoginState = {
   email: string;
   password: string;
   errors: LoginErrors;
+  apiError: string;
 };
 
 type RegisterState = {
@@ -28,6 +29,7 @@ const AuthScreen = () => {
     email: "",
     password: "",
     errors: emptyLoginErrors,
+    apiError: "",
   });
 
   const [registerState, setRegisterState] = useState<RegisterState>({
@@ -67,7 +69,7 @@ const AuthScreen = () => {
       const emailError = validateEmail(text);
 
       if (isLogin) {
-        patchLogin({ email: text });
+        patchLogin({ email: text, apiError: "" }); // Clear API error when user types
         patchLoginErrors({ email: emailError });
       } else {
         patchRegister({ email: text });
@@ -82,7 +84,7 @@ const AuthScreen = () => {
       const passwordError = validatePassword(text);
 
       if (isLogin) {
-        patchLogin({ password: text });
+        patchLogin({ password: text, apiError: "" }); // Clear API error when user types
         patchLoginErrors({ password: passwordError });
         return;
       }
@@ -133,6 +135,7 @@ const AuthScreen = () => {
   const handleClearErrors = useCallback(() => {
     patchLoginErrors(emptyLoginErrors);
     patchRegisterErrors(emptyRegisterErrors);
+    patchLogin({ apiError: "" });
   }, [patchLoginErrors, patchRegisterErrors]);
 
   // ---------- Validity ----------
@@ -170,7 +173,7 @@ const AuthScreen = () => {
     try {
       const response = await handleLogin(loginState.email, loginState.password);
       if (response.status !== 200) {
-        patchLoginErrors({ email: response.message });
+        patchLogin({ apiError: response.message });
       } else {
         if (response.user && response.token) {
           authContext.setUser(response.user);
@@ -181,9 +184,9 @@ const AuthScreen = () => {
         }
       }
     } catch (error: any) {
-      patchLoginErrors({ email: error.message});
+      patchLogin({ apiError: error.message });
     }
-  }, [loginState.email, loginState.password, patchLoginErrors, authContext, router]);
+  }, [loginState.email, loginState.password, patchLogin, authContext, router]);
 
   const handleRegisterAction = useCallback(async () => {
     try {

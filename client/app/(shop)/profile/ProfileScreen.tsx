@@ -1,10 +1,10 @@
-import { StyleSheet, Pressable, Alert } from 'react-native';
+import { StyleSheet, Pressable, Alert, ScrollView } from 'react-native';
 import React, { useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { AppView, AppText, AppButton, AppHeader, AppIconWithBadge } from '@/components/ui';
-import { UserInfo, MenuSections } from '@/components/profile';
+import { UserInfo, MenuSections, ClientInfo } from '@/components/profile';
 import { AuthContext } from '@/contexts/AuthContext';
 import { CartContext } from '@/contexts/CartContext';
 import { handleLogout as handleLogoutHelper } from '@/helpers';
@@ -27,7 +27,7 @@ const ProfileScreen = () => {
       title: 'My Orders',
       icon: <Ionicons name="receipt-outline" size={24} color="#000000" />,
       onPress: () => {
-        console.log('My Orders');
+        router.push('/user/MyOrders');
       },
     },
     {
@@ -103,11 +103,20 @@ const ProfileScreen = () => {
             }
           />
       </AppView>
-      <AppView style={styles.scrollContent}>
+      <ScrollView
+       style={styles.scrollContent}
+       contentContainerStyle={styles.scrollContent}
+      >
         <UserInfo
            names={user.names} 
            email={user.email} 
            role={user.role} 
+        />
+        <ClientInfo
+          balance={user.balance}
+          address={user.address}
+          city={user.city}
+          phone={user.phone}
         />
         <MenuSections menuSections={menuSections} />
 
@@ -120,7 +129,7 @@ const ProfileScreen = () => {
             <AppText style={styles.logoutButtonText}>Logout</AppText>
           </AppButton>
         </AppView>
-      </AppView>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -139,7 +148,6 @@ const styles = StyleSheet.create({
   headerSection: {
     paddingHorizontal: 24,
     paddingTop: 20,
-    paddingBottom: 10,
   },
   logoutSection: {
     paddingHorizontal: 24,

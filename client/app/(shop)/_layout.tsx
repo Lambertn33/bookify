@@ -44,6 +44,8 @@ export default function ShopLayout() {
   const isAuthenticated = authContext.user !== null && authContext.token !== null;
   const isProfilePage = segments.some(segment => segment === 'profile');
   const isCartPage = segments.some(segment => segment === 'cart');
+  const isCheckoutPage = segments.some(segment => segment === 'checkout');
+  const isOrdersPage = segments.some(segment => segment === 'user');
 
   const defaultTabBarStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.75)",
@@ -76,7 +78,7 @@ export default function ShopLayout() {
         headerShown: false,
         tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "#666666",
-        tabBarStyle: isBookItemPage || isAuthPage || isProfilePage || isCartPage ? hiddenTabBarStyle : defaultTabBarStyle,
+        tabBarStyle: isBookItemPage || isAuthPage || isProfilePage || isCartPage || isCheckoutPage || isOrdersPage ? hiddenTabBarStyle : defaultTabBarStyle,
         tabBarShowLabel: false,
       }}
     >
@@ -94,7 +96,7 @@ export default function ShopLayout() {
         }}
       />
       <Tabs.Screen
-        name="orders/OrdersScreen"
+        name="checkout/CheckoutScreen"
         options={{
           href: null,
         }}

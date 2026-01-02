@@ -51,7 +51,7 @@ class AuthController extends Controller
         
         try {
             
-            $user = User::where('email', $request->email)->first();
+            $user = User::with('client')->where('email', $request->email)->first();
 
             if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json(['message' => 'Invalid credentials'], 401);
@@ -71,6 +71,10 @@ class AuthController extends Controller
                     'names' => $user->names,
                     'email' => $user->email,
                     'role' => $user->role,
+                    'balance' => $user->client->balance,
+                    'address' => $user->client->address,
+                    'city' => $user->client->city,
+                    'phone' => $user->client->phone,
                 ],
                 'token' => $token,
             ], 200);

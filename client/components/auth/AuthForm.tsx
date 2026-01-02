@@ -60,12 +60,12 @@ const AuthForm = ({ isLogin, loginState, registerState, handleEmailChange, handl
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
-            hasError={!!(isLogin ? loginState.errors.email : registerState.errors.email)}
+            hasError={!!(isLogin ? (loginState.errors.email || loginState.apiError) : registerState.errors.email)}
             style={styles.input}
           />
-          {(isLogin ? loginState.errors.email : registerState.errors.email) ? (
+          {(isLogin ? (loginState.errors.email || loginState.apiError) : registerState.errors.email) ? (
             <AppText style={styles.errorText}>
-              {isLogin ? loginState.errors.email : registerState.errors.email}
+              {isLogin ? (loginState.errors.email || loginState.apiError) : registerState.errors.email}
             </AppText>
           ) : null}
         </AppView>

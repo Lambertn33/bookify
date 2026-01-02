@@ -7,6 +7,10 @@ interface User {
     names: string;
     email: string;
     role: string;
+    balance: number;
+    address: string;
+    city: string;
+    phone: string;
 }
 
 interface AuthResponse {
