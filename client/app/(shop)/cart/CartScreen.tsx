@@ -14,14 +14,13 @@ const CartScreen = () => {
   const { user } = useContext(AuthContext);
 
   const isLoggedIn = user !== null;
-  console.log('isLoggedIn', isLoggedIn);
 
   const handleBack = () => {
     router.push('/(shop)/books/bookList');
   };
 
   const handleCheckout = () => {
-    console.log('Proceed to checkout');
+    router.push('/(shop)/orders/OrdersScreen');
   };
 
   return (

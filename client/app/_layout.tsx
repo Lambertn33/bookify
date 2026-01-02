@@ -48,34 +48,34 @@ export default function RootLayout() {
     token: string | null;
   } | null>(null);
   const [initialCartItems, setInitialCartItems] = useState<any[]>([]);
-  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [isLoadingInitialData, setIsLoadingInitialData] = useState(true);
 
   useEffect(() => {
-    const loadAuthData = async () => {
+    const loadInitialData = async () => {
       try {
         const { user, token } = await getDataFromLocalStorage();
         const cartItems = await getCartItemsFromLocalStorage();
-        setInitialAuthData({ user: user ? JSON.parse(user) : null, token });
+        setInitialAuthData({ user, token });
         setInitialCartItems(cartItems);
 
       } catch (error) {
         setInitialAuthData({ user: null, token: null });
         setInitialCartItems([]);
       } finally {
-        setIsLoadingAuth(false);
+        setIsLoadingInitialData(false);
       }
     };
 
-    loadAuthData();
+    loadInitialData();
   }, []);
 
   useEffect(() => {
-    if (fontsLoaded && !isLoadingAuth) {
+    if (fontsLoaded && !isLoadingInitialData) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, isLoadingAuth]);
+  }, [fontsLoaded, isLoadingInitialData]);
 
-  if (!fontsLoaded || isLoadingAuth) {
+  if (!fontsLoaded || isLoadingInitialData) {
     return null;
   }
 

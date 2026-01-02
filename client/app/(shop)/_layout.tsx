@@ -94,6 +94,12 @@ export default function ShopLayout() {
         }}
       />
       <Tabs.Screen
+        name="orders/OrdersScreen"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
         name="profile/ProfileScreen"
         options={{
           title: "Profile",
