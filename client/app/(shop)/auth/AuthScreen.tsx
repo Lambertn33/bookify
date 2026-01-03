@@ -22,6 +22,7 @@ type RegisterState = {
   password: string;
   confirmPassword: string;
   errors: RegisterErrors;
+  apiError: string;
 };
 
 const AuthScreen = () => {
@@ -44,6 +45,7 @@ const AuthScreen = () => {
     password: "",
     confirmPassword: "",
     errors: emptyRegisterErrors,
+    apiError: "",
   });
 
   // ---------- Small state helpers ----------
@@ -78,7 +80,7 @@ const AuthScreen = () => {
         patchLogin({ email: text, apiError: "" }); // Clear API error when user types
         patchLoginErrors({ email: emailError });
       } else {
-        patchRegister({ email: text });
+        patchRegister({ email: text, apiError: "" }); // Clear API error when user types
         patchRegisterErrors({ email: emailError });
       }
     },
@@ -104,6 +106,7 @@ const AuthScreen = () => {
         return {
           ...prev,
           password: text,
+          apiError: "", // Clear API error when user types
           errors: {
             ...prev.errors,
             password: passwordError,
@@ -120,6 +123,7 @@ const AuthScreen = () => {
       setRegisterState((prev) => ({
         ...prev,
         confirmPassword: text,
+        apiError: "", // Clear API error when user types
         errors: {
           ...prev.errors,
           confirmPassword: validateConfirmPassword(prev.password, text),
@@ -132,7 +136,7 @@ const AuthScreen = () => {
   const handleNamesChange = useCallback(
     (text: string) => {
       const namesError = validateNames(text);
-      patchRegister({ names: text });
+      patchRegister({ names: text, apiError: "" }); // Clear API error when user types
       patchRegisterErrors({ names: namesError });
     },
     [patchRegister, patchRegisterErrors, validateNames]
@@ -141,7 +145,7 @@ const AuthScreen = () => {
   const handlePhoneChange = useCallback(
     (text: string) => {
       const phoneError = validatePhone(text);
-      patchRegister({ phone: text });
+      patchRegister({ phone: text, apiError: "" }); // Clear API error when user types
       patchRegisterErrors({ phone: phoneError });
     },
     [patchRegister, patchRegisterErrors, validatePhone]
@@ -150,7 +154,7 @@ const AuthScreen = () => {
   const handleAddressChange = useCallback(
     (text: string) => {
       const addressError = validateAddress(text);
-      patchRegister({ address: text });
+      patchRegister({ address: text, apiError: "" }); // Clear API error when user types
       patchRegisterErrors({ address: addressError });
     },
     [patchRegister, patchRegisterErrors, validateAddress]
@@ -159,7 +163,7 @@ const AuthScreen = () => {
   const handleCityChange = useCallback(
     (text: string) => {
       const cityError = validateCity(text);
-      patchRegister({ city: text });
+      patchRegister({ city: text, apiError: "" }); // Clear API error when user types
       patchRegisterErrors({ city: cityError });
     },
     [patchRegister, patchRegisterErrors, validateCity]
@@ -169,26 +173,32 @@ const AuthScreen = () => {
     patchLoginErrors(emptyLoginErrors);
     patchRegisterErrors(emptyRegisterErrors);
     patchLogin({ apiError: "" });
-  }, [patchLoginErrors, patchRegisterErrors]);
+    patchRegister({ apiError: "" });
+  }, [patchLoginErrors, patchRegisterErrors, patchLogin, patchRegister]);
 
   // ---------- Validity ----------
   const isRegisterFormValid = useCallback(() => {
-    return (
-      registerState.names.length > 0 &&
-      !registerState.errors.names &&
-      registerState.email.length > 0 &&
-      !registerState.errors.email &&
-      registerState.phone.length > 0 &&
-      !registerState.errors.phone &&
-      registerState.address.length > 0 &&
-      !registerState.errors.address &&
-      registerState.city.length > 0 &&
-      !registerState.errors.city &&
+    // Check if all fields have values
+    const hasAllFields = 
+      registerState.names.trim().length > 0 &&
+      registerState.email.trim().length > 0 &&
+      registerState.phone.trim().length > 0 &&
+      registerState.address.trim().length > 0 &&
+      registerState.city.trim().length > 0 &&
       registerState.password.length > 0 &&
+      registerState.confirmPassword.length > 0;
+    
+    // Check if there are no validation errors (ignore apiError)
+    const hasNoErrors = 
+      !registerState.errors.names &&
+      !registerState.errors.email &&
+      !registerState.errors.phone &&
+      !registerState.errors.address &&
+      !registerState.errors.city &&
       !registerState.errors.password &&
-      registerState.confirmPassword.length > 0 &&
-      !registerState.errors.confirmPassword
-    );
+      !registerState.errors.confirmPassword;
+    
+    return hasAllFields && hasNoErrors;
   }, [registerState]);
 
   const isLoginFormValid = useCallback(() => {
@@ -228,6 +238,11 @@ const AuthScreen = () => {
   }, [loginState.email, loginState.password, patchLogin, authContext, router]);
 
   const handleRegisterAction = useCallback(async () => {
+    // Double-check form validity before submitting
+    if (!isRegisterFormValid()) {
+      return;
+    }
+
     try {
       const response = await handleRegister(
         registerState.names,
@@ -238,14 +253,20 @@ const AuthScreen = () => {
         registerState.password
       );
       if (response.status !== 200) {
-        patchRegisterErrors({ email: response.message });
+        patchRegister({ apiError: response.message });
       } else {
-        // REGISTER REDIRECT
+        if (response.user && response.token) {
+          authContext.setUser(response.user);
+          authContext.setToken(response.token);
+          // Save to AsyncStorage
+          await saveDataToLocalStorage(response.token, response.user);
+          router.push("/(shop)/books/bookList");
+        }
       }
     } catch (error: any) {
-      console.error("Register error:", error.message);
+      patchRegister({ apiError: error.message });
     }
-  }, [registerState.names, registerState.email, registerState.phone, registerState.address, registerState.city, registerState.password, patchRegisterErrors]);
+  }, [registerState, isRegisterFormValid, patchRegister, authContext, router]);
 
   return (
     <AuthForm

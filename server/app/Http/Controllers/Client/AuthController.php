@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Client;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -16,6 +17,9 @@ class AuthController extends Controller
         
         $request->validate([
             'names' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
         ]);
@@ -29,6 +33,13 @@ class AuthController extends Controller
                 'auth-type' => User::MOBILE_AUTH,
             ]);
             if ($user) {
+                Client::create([
+                    'user_id' => $user->id,
+                    'address' => $request->address,
+                    'city' => $request->city,
+                    'phone' => $request->phone,
+                    'balance' => 10000,
+                ]);
                 // automatically login the user
                 return $this->login($request);
             } else {
