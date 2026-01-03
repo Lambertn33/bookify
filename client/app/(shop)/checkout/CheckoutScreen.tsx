@@ -1,16 +1,17 @@
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { AppView, AppText, AppHeader, AppButton } from '@/components/ui';
+import { AppView, AppHeader } from '@/components/ui';
+import { CheckoutItems, CheckoutSummary } from '@/components/checkout';
 import { CartContext } from '@/contexts/CartContext';
 import { AuthContext } from '@/contexts/AuthContext';
 import { Pressable } from 'react-native';
 
 const CheckoutScreen = () => {
   const router = useRouter();
-  const { getCartTotalPrice, clearCart } = useContext(CartContext);
+  const { cartItems, getCartTotalPrice, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
 
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
@@ -20,36 +21,7 @@ const CheckoutScreen = () => {
   };
 
   const handlePay = async () => {
-    const amountToPay = getCartTotalPrice();
-    const userBalance = Number(user?.balance) || 0;
-
-    if (amountToPay > userBalance) {
-      Alert.alert(
-        'Insufficient Balance',
-        `You don't have enough balance. Your balance is $${userBalance.toFixed(2)} but you need $${amountToPay.toFixed(2)}.`
-      );
-      return;
-    }
-
-    setIsPlacingOrder(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsPlacingOrder(false);
-      Alert.alert(
-        'Payment Successful!',
-        'Your order has been placed successfully.',
-        [
-          {
-            text: 'OK',
-            onPress: async () => {
-              await clearCart();
-              router.push('/(shop)/books/bookList');
-            },
-          },
-        ]
-      );
-    }, 1500);
+   
   };
 
   const amountToPay = getCartTotalPrice();
@@ -69,39 +41,22 @@ const CheckoutScreen = () => {
         />
       </AppView>
 
-      <AppView style={styles.content}>
-        <AppView style={styles.paymentCard}>
-          <AppText style={styles.title}>Payment Summary</AppText>
-          
-          <AppView style={styles.amountRow}>
-            <AppText style={styles.label}>Amount to pay</AppText>
-            <AppText style={styles.amount}>${amountToPay.toFixed(2)}</AppText>
-          </AppView>
-
-          <AppView style={styles.amountRow}>
-            <AppText style={styles.label}>Initial balance</AppText>
-            <AppText style={styles.amount}>${initialBalance.toFixed(2)}</AppText>
-          </AppView>
-
-          <AppView style={styles.divider} />
-
-          <AppView style={styles.amountRow}>
-            <AppText style={styles.label}>Remaining balance</AppText>
-            <AppText style={[styles.amount, remainingBalance < 0 && styles.negativeAmount]}>
-              ${remainingBalance.toFixed(2)}
-            </AppText>
-          </AppView>
-
-          <AppButton
-            onPress={handlePay}
-            disabled={isPlacingOrder || amountToPay === 0}
-            style={styles.payButton}
-          >
-            <AppText style={styles.payButtonText}>
-              {isPlacingOrder ? 'Processing...' : 'Pay'}
-            </AppText>
-          </AppButton>
-        </AppView>
+      <AppView style={styles.content} >
+        {/* Books Summary */}
+        {cartItems.length > 0 && (
+          <CheckoutItems 
+            cartItems={cartItems} 
+            title="Order Summary" 
+          />
+        )}
+        {/* Payment Summary */}
+        <CheckoutSummary
+          amountToPay={amountToPay}
+          initialBalance={initialBalance}
+          remainingBalance={remainingBalance}
+          handlePay={handlePay}
+          isPlacingOrder={isPlacingOrder}
+        />
       </AppView>
     </SafeAreaView>
   );
@@ -112,7 +67,7 @@ export default CheckoutScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f5f5f5',
   },
   headerContainer: {
     paddingHorizontal: 20,
@@ -124,56 +79,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-  },
-  paymentCard: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#FAFAFA',
-    borderRadius: 20,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: 'Poppins_600SemiBold',
-    color: '#000000',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  amountRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontFamily: 'Poppins_400Regular',
-    color: '#666666',
-  },
-  amount: {
-    fontSize: 18,
-    fontFamily: 'Poppins_600SemiBold',
-    color: '#000000',
-  },
-  negativeAmount: {
-    color: '#FF3B30',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#E5E5E5',
-    marginVertical: 16,
-  },
-  payButton: {
-    marginTop: 24,
-  },
-  payButtonText: {
-    fontSize: 16,
-    fontFamily: 'Poppins_600SemiBold',
-    color: '#FFFFFF',
+    gap: 16,
   },
 });
