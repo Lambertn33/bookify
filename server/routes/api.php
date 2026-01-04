@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\BooksCategoriesController;
 use App\Http\Controllers\Client\BooksController;
 use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\OrdersController;
 
 Route::get('/categories', [BooksCategoriesController::class, 'index']);
 Route::prefix('books')->group(function () {
@@ -19,4 +20,8 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', 'logout');
     });
+});
+
+Route::prefix('orders')->middleware('auth:sanctum')->controller(OrdersController::class)->group(function () {
+    Route::post('/', 'createOrder');
 });
