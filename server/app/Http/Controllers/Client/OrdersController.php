@@ -10,6 +10,8 @@ use App\Models\Book;
 use App\Models\Client;
 use App\Models\User;
 use App\Services\NotificationsService;
+use Filament\Actions\Action;
+use App\Filament\Resources\Orders\OrderResource;
 
 
 class OrdersController extends Controller
@@ -62,7 +64,13 @@ class OrdersController extends Controller
                 'total_price' => $book->price * $item['quantity'],
             ]);
         }
-        (new NotificationsService)->sendNotification('New Order Made', "New order has been created by {$user->name}");
+        (new NotificationsService)->sendNotification('New Order Made', "New order has been created by {$user->name}", [
+            Action::make('View Order')
+                ->url(OrderResource::getUrl('view', ['record' => $newOrder]))
+                ->label('View Order')
+                ->markAsRead()
+                ->color('primary'),
+        ]);
 
         return response()->json([
             'message' => 'Order created successfully',
