@@ -23,8 +23,10 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::prefix('orders')->middleware('auth:sanctum')->controller(OrdersController::class)->group(function () {
+    Route::get('/', 'getMyOrders');
     Route::post('/', 'createOrder');
     Route::prefix('{order}')->group(function () {
+        Route::get('/', 'getOrderDetails');
         Route::put('/cancel', 'cancelOrder');
     });
 });

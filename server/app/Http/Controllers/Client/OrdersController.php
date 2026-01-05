@@ -16,6 +16,46 @@ use App\Filament\Resources\Orders\OrderResource;
 
 class OrdersController extends Controller
 {
+    public function getMyOrders(Request $request)
+    {
+        $request->headers->set('Accept', 'application/json');
+        $user = auth()->user();
+        $client = $user->client;
+        $orders = $client->orders()->withCount('books')
+            ->select('id', 'total', 'status', 'created_at')
+            ->orderBy('created_at', 'desc')->get();
+
+
+        return response()->json([
+            'message' => 'Orders fetched successfully',
+            'orders' => $orders,
+        ], 200);
+    }
+
+    public function getOrderDetails(Request $request, Order $order)
+    {
+        $request->headers->set('Accept', 'application/json');
+        
+        $order->load('books');
+        $books = $order->books->map(function ($book) {
+            return [
+                'id' => $book->id,
+                'title' => $book->title,
+                'author' => $book->author,
+                'cover_image_url' => $book->getCoverImageUrlAttribute(),
+                'quantity' => $book->pivot->quantity,
+                'total_price' => $book->pivot->total_price,
+            ];
+        });
+
+        return response()->json([
+            'id' => $order->id,
+            'order_date' => $order->created_at->format('d-m-Y'),
+            'status' => $order->status,
+            'total' => $order->total,
+            'books' => $books,
+        ], 200);
+    }
     public function createOrder(Request $request)
     {
         $request->headers->set('Accept', 'application/json');
