@@ -10,12 +10,12 @@ class Order extends Model
 {
     const STATUSES = [
         'PENDING',
-        'PAID',
+        'CONFIRMED',
         'CANCELLED',
     ];
 
     const PENDING = self::STATUSES[0];
-    const PAID = self::STATUSES[1];
+    const CONFIRMED = self::STATUSES[1];
     const CANCELLED = self::STATUSES[2];
     
     protected $fillable = [

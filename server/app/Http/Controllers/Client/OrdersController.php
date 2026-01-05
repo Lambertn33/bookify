@@ -20,6 +20,7 @@ class OrdersController extends Controller
         $user = auth()->user();
         $client = $user->client;
         $total = 0;
+        
         if (!$client) {
             return response()->json([
                 'message' => 'Client not found',
@@ -44,11 +45,6 @@ class OrdersController extends Controller
                     'message' => "Book stock not enough: {$book->title} - {$book->stock} < {$item['quantity']}",
                 ], 422);
             }
-
-            $book->update([
-                'stock' => $book->stock - $item['quantity'],
-            ]);
-
             $total += $book->price * $item['quantity'];
         }
 
@@ -59,6 +55,7 @@ class OrdersController extends Controller
         ]);
 
         foreach ($request->items as $index => $item) {
+            $book = Book::find($item['book_id']);
             $newOrder->books()->attach($item['book_id'], [
                 'quantity' => $item['quantity'],
                 'unit_price' => $book->price,
