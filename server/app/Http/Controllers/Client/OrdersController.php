@@ -77,4 +77,42 @@ class OrdersController extends Controller
             'order' => $newOrder->load('books'),
         ], 201);
     }
+
+    public function cancelOrder(Request $request, Order $order)
+    {
+        $request->headers->set('Accept', 'application/json');
+        $user = auth()->user();
+        $client = $user->client;
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order not found',
+            ], 404);
+        }
+
+        if ($order->client_id !== $client->id) {
+            return response()->json([
+                'message' => 'You are not authorized to cancel this order',
+            ], 403);
+        }
+
+        if ($order->status !== Order::PENDING) {
+            return response()->json([
+                'message' => 'Order is not pending',
+            ], 400);
+        }
+
+        $order->update(['status' => Order::CANCELLED]);
+        (new NotificationsService)->sendNotification('Order Cancelled', "Order # {$order->id} has been cancelled by {$user->name}", [
+            Action::make('View Order')
+                ->url(OrderResource::getUrl('view', ['record' => $order]))
+                ->label('View Cancelled Order')
+                ->markAsRead()
+                ->color('primary'),
+        ]);
+        return response()->json([
+            'message' => 'Order cancelled successfully',
+            'order' => $order,
+        ], 200);
+    }
 }

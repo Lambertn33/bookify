@@ -30,7 +30,7 @@ class OrdersTable
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         Order::PENDING => 'warning',
-                        Order::PAID => 'success',
+                        Order::CONFIRMED => 'success',
                         Order::CANCELLED => 'danger',
                     })->sortable()->icon(Heroicon::CheckCircle),
                 TextColumn::make('created_at')

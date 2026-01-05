@@ -24,4 +24,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 
 Route::prefix('orders')->middleware('auth:sanctum')->controller(OrdersController::class)->group(function () {
     Route::post('/', 'createOrder');
+    Route::prefix('{order}')->group(function () {
+        Route::put('/cancel', 'cancelOrder');
+    });
 });

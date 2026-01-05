@@ -24,7 +24,7 @@ class OrderInfolist
                             ->badge()
                             ->color(fn (string $state): string => match ($state) {
                                 Order::PENDING => 'warning',
-                                Order::PAID => 'success',
+                                Order::CONFIRMED => 'success',
                                 Order::CANCELLED => 'danger',
                             }),
                         TextEntry::make('total')
