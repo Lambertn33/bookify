@@ -8,7 +8,7 @@ import { useContext } from 'react'
 
 import {  AppButton, AppHeader, AppText, AppView, AppIconWithBadge } from '@/components/ui'
 import { BookItemImage, BookItemHeaderContents, BookItemDescription } from '@/components/books'
-import { useFetchBook } from '@/hooks/useFetchBook'
+import { useFetchBook } from '@/hooks/useBook'
 
 const bookItem = () => {
   const router = useRouter();

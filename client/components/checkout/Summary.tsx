@@ -5,11 +5,11 @@ interface SummaryProps {
   amountToPay: number;
   initialBalance: number;
   remainingBalance: number;
-  handlePay: () => void;
+  handlePlaceOrder: () => void;
   isPlacingOrder: boolean;
 }
 
-const Summary = ({ amountToPay, initialBalance, remainingBalance, handlePay, isPlacingOrder }: SummaryProps) => {
+const Summary = ({ amountToPay, initialBalance, remainingBalance, handlePlaceOrder, isPlacingOrder }: SummaryProps) => {
   return (
     <AppView style={styles.paymentCard} paddingTop={40} paddingBottom={40}>
     <AppText style={styles.title}>Payment Summary</AppText>
@@ -34,12 +34,12 @@ const Summary = ({ amountToPay, initialBalance, remainingBalance, handlePay, isP
     </AppView>
 
     <AppButton
-      onPress={handlePay}
+      onPress={handlePlaceOrder}
       disabled={isPlacingOrder || amountToPay === 0}
       style={styles.payButton}
     >
       <AppText style={styles.payButtonText}>
-        {isPlacingOrder ? 'Processing...' : 'Pay'}
+        {isPlacingOrder ? 'Processing...' : 'Place Order'}
       </AppText>
     </AppButton>
   </AppView>

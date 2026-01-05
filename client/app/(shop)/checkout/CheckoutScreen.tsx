@@ -8,21 +8,32 @@ import { CheckoutItems, CheckoutSummary } from '@/components/checkout';
 import { CartContext } from '@/contexts/CartContext';
 import { AuthContext } from '@/contexts/AuthContext';
 import { Pressable } from 'react-native';
+import { useCreateOrder } from '@/hooks/useOrders';
 
 const CheckoutScreen = () => {
   const router = useRouter();
   const { cartItems, getCartTotalPrice, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
 
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-
   const handleBack = () => {
     router.back();
   };
 
-  const handlePay = async () => {
-   
-  };
+  const  createOrderMutation = useCreateOrder({
+    onSuccess: (message) => {
+      console.log('onSuccess', message);
+    },
+    onError: (error) => {
+      console.log('onError', error);
+    },
+    onSuccessCallback: (message) => {
+      console.log('onSuccessCallback', message);
+    },
+  });
+
+  const handlePlaceOrder = () => {
+    createOrderMutation.mutate({ items: cartItems.map(item => ({ book_id: item.id, quantity: item.quantity })) });
+  }
 
   const amountToPay = getCartTotalPrice();
   const initialBalance = Number(user?.balance) || 0;
@@ -54,8 +65,8 @@ const CheckoutScreen = () => {
           amountToPay={amountToPay}
           initialBalance={initialBalance}
           remainingBalance={remainingBalance}
-          handlePay={handlePay}
-          isPlacingOrder={isPlacingOrder}
+          handlePlaceOrder={handlePlaceOrder}
+          isPlacingOrder={createOrderMutation.isPending}
         />
       </AppView>
     </SafeAreaView>
