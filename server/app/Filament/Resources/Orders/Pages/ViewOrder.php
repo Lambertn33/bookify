@@ -7,6 +7,8 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\Action;
 use Filament\Support\Icons\Heroicon;
 use App\Models\Order;
+use App\Services\OrdersServices;
+use Filament\Notifications\Notification;    
 
 class ViewOrder extends ViewRecord
 {
@@ -24,8 +26,13 @@ class ViewOrder extends ViewRecord
                 ->color('success')
                 ->icon(Heroicon::CheckCircle)
                 ->action(function (Order $order) {
-                    // $order->update(['status' => Order::APPROVED_AND_SHIPPED]);
-                    dd($order);
+                    (new OrdersServices)->approveAndShipOrder($order->id);
+                    Notification::make()
+                        ->title('Order Approved and Shipped')
+                        ->body("Order # {$order->id} has been approved and shipped")
+                        ->success()
+                        ->send();
+                    $this->redirect(OrderResource::getUrl('index'));
                 })
                 ->visible(fn (Order $order): bool => $order->status === Order::PENDING)
                 ->requiresConfirmation()
