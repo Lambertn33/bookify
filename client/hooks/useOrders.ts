@@ -9,7 +9,7 @@ interface CreateOrderObject {
 
 interface MyOrdersResponse {
     message: string;
-    orders: {id: number; order_date: string; status: string; total: number}[];
+    orders: {id: string; orderNumber: string; date: string; status: string; total: number; items: {id: number; title: string; quantity: number; price: number}[]}[];
 }
 
 export const useGetMyOrders = () => {

@@ -21,14 +21,35 @@ class OrdersController extends Controller
         $request->headers->set('Accept', 'application/json');
         $user = auth()->user();
         $client = $user->client;
-        $orders = $client->orders()->withCount('books')
+        $orders = $client->orders()
+            ->with('books:id,title')
             ->select('id', 'total', 'status', 'created_at', 'code')
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
+        $formattedOrders = $orders->map(function ($order) {
+            $items = $order->books->map(function ($book) {
+                return [
+                    'id' => $book->id,
+                    'title' => $book->title,
+                    'quantity' => $book->pivot->quantity,
+                    'price' => $book->pivot->unit_price,
+                ];
+            });
+
+            return [
+                'id' => (string) $order->id,
+                'orderNumber' => $order->code,
+                'date' => $order->created_at->format('Y-m-d'),
+                'status' => strtolower($order->status),
+                'total' => (float) $order->total,
+                'items' => $items,
+            ];
+        });
 
         return response()->json([
             'message' => 'Orders fetched successfully',
-            'orders' => $orders,
+            'orders' => $formattedOrders,
         ], 200);
     }
 
