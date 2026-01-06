@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { clearAuthLocalStorage } from "@/helpers";
+import { clearAuthLocalStorage, saveDataToLocalStorage } from "@/helpers";
 
 interface User {
     id: number;
@@ -17,6 +17,7 @@ interface AuthContextType {
     token: string | null;
     setUser: (user: User) => void;
     setToken: (token: string) => void;
+    refreshUser: (user: User) => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -25,6 +26,7 @@ export const AuthContext = createContext<AuthContextType>({
     token: null,  
     setUser: () => {},
     setToken: () => {},
+    refreshUser: async () => {},
     logout: async () => {},
 });
 
@@ -48,11 +50,18 @@ export const AuthProvider = ({
         setToken(token);
     }
 
+    const handleRefreshUser = async (updatedUser: User) => {
+        setUser(updatedUser);
+        if (token) {
+            await saveDataToLocalStorage(token, updatedUser);
+        }
+    }
+
     const handleLogout = async () => {
         setUser(null);
         setToken(null);
         await clearAuthLocalStorage();
     }
 
-    return <AuthContext.Provider value={{ user, token, setUser: handleSetUser, setToken: handleSetToken, logout: handleLogout }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, token, setUser: handleSetUser, setToken: handleSetToken, refreshUser: handleRefreshUser, logout: handleLogout }}>{children}</AuthContext.Provider>;
 }

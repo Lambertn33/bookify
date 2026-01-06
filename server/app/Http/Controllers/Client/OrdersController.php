@@ -110,6 +110,16 @@ class OrdersController extends Controller
             }
             $total += $book->price * $item['quantity'];
         }
+        
+        // Check if client has sufficient balance
+        $client->refresh();
+        $currentBalance = (float) $client->balance;
+        if ($currentBalance < $total) {
+            return response()->json([
+                'message' => "Insufficient balance. Your balance is $" . number_format($currentBalance, 2) . " but order total is $" . number_format($total, 2),
+            ], 422);
+        }
+        
         $currentYear = date('Y');
         $clientId = $client->id;
         
@@ -136,8 +146,14 @@ class OrdersController extends Controller
                 'total_price' => $book->price * $item['quantity'],
             ]);
         }
+        
+        // Deduct balance - ensure proper numeric casting
+        $newBalance = $currentBalance - (float) $total;
+        $client->update(['balance' => $newBalance]);
+        
+        // Refresh user and client to get updated data
+        $user->refresh();
         $client->refresh();
-        $client->update(['balance' => $client->balance - $total]);
         
         (new NotificationsService)->sendNotification('New Order Made', "New order has been created by {$user->name}", [
             Action::make('View Order')
@@ -150,6 +166,16 @@ class OrdersController extends Controller
         return response()->json([
             'message' => 'Order created successfully',
             'order' => $newOrder->load('books'),
+            'user' => [
+                'id' => $user->id,
+                'names' => $user->names,
+                'email' => $user->email,
+                'role' => $user->role,
+                'balance' => $client->balance,
+                'address' => $client->address,
+                'city' => $client->city,
+                'phone' => $client->phone,
+            ],
         ], 201);
     }
 
@@ -177,10 +203,17 @@ class OrdersController extends Controller
             ], 400);
         }
 
+        // Refund balance - ensure proper numeric casting
         $client->refresh();
-        $client->update(['balance' => $client->balance + $order->total]);
+        $currentBalance = (float) $client->balance;
+        $newBalance = $currentBalance + (float) $order->total;
+        $client->update(['balance' => $newBalance]);
 
         $order->update(['status' => Order::CANCELLED]);
+        
+        // Refresh user and client to get updated data
+        $user->refresh();
+        $client->refresh();
         
         (new NotificationsService)->sendNotification('Order Cancelled', "Order # {$order->id} has been cancelled by {$user->name}", [
             Action::make('View Order')
@@ -192,6 +225,16 @@ class OrdersController extends Controller
         return response()->json([
             'message' => 'Order cancelled successfully',
             'order' => $order,
+            'user' => [
+                'id' => $user->id,
+                'names' => $user->names,
+                'email' => $user->email,
+                'role' => $user->role,
+                'balance' => $client->balance,
+                'address' => $client->address,
+                'city' => $client->city,
+                'phone' => $client->phone,
+            ],
         ], 200);
     }
 }

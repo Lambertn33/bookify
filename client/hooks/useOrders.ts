@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useContext } from 'react';
 import { createOrder, getMyOrders as getMyOrdersApi , cancelOrder as cancelOrderApi } from '@/api';
+import { AuthContext } from '@/contexts/AuthContext';
 
 
 
@@ -26,10 +28,15 @@ export const useCancelOrder = (options: {
     onSuccessCallback?: (message: string) => void;
 }) => {
     const queryClient = useQueryClient();
+    const { refreshUser } = useContext(AuthContext);
+    
     const cancelOrderMutation = useMutation({
         mutationFn: (orderId: string) => cancelOrderApi(orderId),
         onSuccess: async(data) => {
             await queryClient.invalidateQueries({ queryKey: ['orders'] });
+            if (data?.user) {
+                await refreshUser(data.user);
+            }
             options.onSuccess?.(data?.message || 'Order cancelled successfully');
             options.onSuccessCallback?.(data?.message || 'Order cancelled successfully');
         },
@@ -46,11 +53,15 @@ export const useCreateOrder = (options: {
     onSuccessCallback?: (message: string) => void;
 }) => {
     const queryClient = useQueryClient();
+    const { refreshUser } = useContext(AuthContext);
     
     const createOrderMutation = useMutation({
         mutationFn: (order: CreateOrderObject) => createOrder(order),
         onSuccess: async(data) => {
             await queryClient.invalidateQueries({ queryKey: ['orders'] });
+            if (data?.user) {
+                await refreshUser(data.user);
+            }
             options.onSuccess?.(data?.message || 'Order created successfully');
             options.onSuccessCallback?.(data?.message || 'Order created successfully');
         },
