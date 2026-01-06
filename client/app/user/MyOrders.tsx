@@ -1,11 +1,11 @@
 import { StyleSheet, ScrollView, Pressable } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { AppView, AppText, AppHeader } from '@/components/ui';
+import { AppView, AppHeader, AppModal } from '@/components/ui';
 import { AuthContext } from '@/contexts/AuthContext';
-import { useGetMyOrders } from '@/hooks/useOrders';
+import { useGetMyOrders, useCancelOrder } from '@/hooks/useOrders';
 import { Empty, Item } from '@/components/orders';
 
 interface Order {
@@ -23,17 +23,42 @@ interface Order {
 }
 
 const OrdersScreen = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
   const router = useRouter();
   const { user } = useContext(AuthContext);
-  const { data, isLoading, isError, error } = useGetMyOrders();
+  const { data: ordersData, isLoading: isLoadingOrders, isError: isErrorOrders, error: errorOrders } = useGetMyOrders();
   
-  const orders: Order[] = (data?.orders || []).map(order => ({
+  const orders: Order[] = (ordersData?.orders || []).map(order => ({
     ...order,
     status: order.status as Order['status'],
   }));
 
   const handleBack = () => {
     router.back();
+  };
+
+  const cancelOrderMutation = useCancelOrder({
+    onSuccess: (message) => {
+      setSuccessMessage(message);
+      setIsModalVisible(true);
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+      setIsModalVisible(true);
+    },
+  });
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setErrorMessage('');
+    setSuccessMessage('');
+  };
+
+  const handleCancelOrder = (orderId: string) => {
+    cancelOrderMutation.mutate(orderId);
   };
 
   return (
@@ -53,14 +78,14 @@ const OrdersScreen = () => {
        <Empty 
           title="Please log in to view orders" 
           text="Sign in to see your order history" />
-      ) : isLoading ? (
+      ) : isLoadingOrders ? (
         <Empty
           title="Loading orders..." 
           text="Please wait while we load your orders" />
-      ) : isError ? (
+      ) : isErrorOrders ? (
         <Empty
           title="Error loading orders" 
-          text={error?.message || 'Please try again later'}
+          text={errorOrders?.message || 'Please try again later'}
           />
       ) : orders.length === 0 ? (
          <Empty
@@ -72,8 +97,23 @@ const OrdersScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           {orders.map((order) => (
-            <Item key={order.id} order={order} />
+            <Item 
+              key={order.id} 
+              order={order} 
+              onCancelOrder={handleCancelOrder} 
+              isLoadingCancelOrder={cancelOrderMutation.isPending}
+            />
           ))}
+          {
+        isModalVisible && (
+          <AppModal
+            isVisible={isModalVisible}
+            onClose={handleCloseModal}
+            message={successMessage || errorMessage}
+            success={!errorMessage}
+          />
+        )
+      }
         </ScrollView>
       )}
     </SafeAreaView>

@@ -41,7 +41,13 @@ interface Order {
     }>;
   }
 
-const Item = ({ order }: { order: Order }) => {
+interface ItemProps {
+    order: Order;
+    onCancelOrder: (orderId: string) => void;
+    isLoadingCancelOrder: boolean;
+}
+
+const Item = ({ order, onCancelOrder, isLoadingCancelOrder }: ItemProps) => {
   const normalizedStatus = order.status.toUpperCase() as 'PENDING' | 'CONFIRMED' | 'CANCELLED';
   
   return (
@@ -92,8 +98,10 @@ const Item = ({ order }: { order: Order }) => {
     </AppView>
     {
         normalizedStatus === 'PENDING' && (
-            <AppButton style={styles.cancelOrderButton}>
-                <AppText style={styles.cancelOrderText}>Cancel Order</AppText>
+            <AppButton disabled={isLoadingCancelOrder} style={styles.cancelOrderButton} onPress={() => onCancelOrder(order.id)}>
+                <AppText style={styles.cancelOrderText}>
+                    {isLoadingCancelOrder ? 'Cancelling...' : 'Cancel Order'}
+                </AppText>
             </AppButton>
         )
     }

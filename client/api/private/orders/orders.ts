@@ -27,3 +27,9 @@ export const createOrder = async(order: Order) => {
     const response = await api.post('/', order, { headers });
     return response.data;
 }
+
+export const cancelOrder = async(orderId: string) => {
+    const headers = await getAuthHeaders();
+    const response = await api.put(`/${orderId}/cancel`, {}, { headers });
+    return response.data;
+}

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { createOrder, getMyOrders as getMyOrdersApi } from '@/api';
+import { createOrder, getMyOrders as getMyOrdersApi , cancelOrder as cancelOrderApi } from '@/api';
 
 
 
@@ -18,6 +18,26 @@ export const useGetMyOrders = () => {
         queryFn: () => getMyOrdersApi(),
     });
     return { data, isLoading, isError, error };
+}
+
+export const useCancelOrder = (options: {
+    onSuccess?: (message: string) => void;
+    onError?: (error: Error) => void;
+    onSuccessCallback?: (message: string) => void;
+}) => {
+    const queryClient = useQueryClient();
+    const cancelOrderMutation = useMutation({
+        mutationFn: (orderId: string) => cancelOrderApi(orderId),
+        onSuccess: async(data) => {
+            await queryClient.invalidateQueries({ queryKey: ['orders'] });
+            options.onSuccess?.(data?.message || 'Order cancelled successfully');
+            options.onSuccessCallback?.(data?.message || 'Order cancelled successfully');
+        },
+        onError: (error) => {
+            options.onError?.(error);
+        },
+    });
+    return cancelOrderMutation;
 }
 
 export const useCreateOrder = (options: {
