@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { AppView, AppHeader } from '@/components/ui';
+import { AppView, AppHeader, AppModal } from '@/components/ui';
 import { CheckoutItems, CheckoutSummary } from '@/components/checkout';
 import { CartContext } from '@/contexts/CartContext';
 import { AuthContext } from '@/contexts/AuthContext';
@@ -14,6 +14,9 @@ const CheckoutScreen = () => {
   const router = useRouter();
   const { cartItems, getCartTotalPrice, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleBack = () => {
     router.back();
@@ -21,18 +24,26 @@ const CheckoutScreen = () => {
 
   const  createOrderMutation = useCreateOrder({
     onSuccess: (message) => {
-      console.log('onSuccess', message);
+      setSuccessMessage(message);
+      setIsModalVisible(true);
     },
     onError: (error) => {
-      console.log('onError', error);
+      setErrorMessage(error.message);
+      setIsModalVisible(true);
     },
     onSuccessCallback: (message) => {
-      console.log('onSuccessCallback', message);
+      setSuccessMessage(message);
     },
   });
 
   const handlePlaceOrder = () => {
     createOrderMutation.mutate({ items: cartItems.map(item => ({ book_id: item.id, quantity: item.quantity })) });
+  }
+
+  const handleCloseModal = async() => {
+    await clearCart();
+    setIsModalVisible(false);
+    router.push('/user/MyOrders');
   }
 
   const amountToPay = getCartTotalPrice();
@@ -69,6 +80,16 @@ const CheckoutScreen = () => {
           isPlacingOrder={createOrderMutation.isPending}
         />
       </AppView>
+      {
+        isModalVisible && (
+          <AppModal
+            isVisible={isModalVisible}
+            onClose={handleCloseModal}
+            message={successMessage || errorMessage}
+            success={!errorMessage}
+          />
+        )
+      }
     </SafeAreaView>
   );
 };

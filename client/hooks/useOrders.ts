@@ -31,6 +31,8 @@ export const useCreateOrder = (options: {
         mutationFn: (order: CreateOrderObject) => createOrder(order),
         onSuccess: async(data) => {
             await queryClient.invalidateQueries({ queryKey: ['orders'] });
+            options.onSuccess?.(data?.message || 'Order created successfully');
+            options.onSuccessCallback?.(data?.message || 'Order created successfully');
         },
         onError: (error) => {
             options.onError?.(error);
