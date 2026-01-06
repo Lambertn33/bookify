@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained('clients');
             $table->decimal('total', 10, 2);
+            $table->string('code');
             $table->enum('status', Order::STATUSES)->default(Order::PENDING);
             $table->timestamps();
         });

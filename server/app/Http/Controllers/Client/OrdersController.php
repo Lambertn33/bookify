@@ -22,7 +22,7 @@ class OrdersController extends Controller
         $user = auth()->user();
         $client = $user->client;
         $orders = $client->orders()->withCount('books')
-            ->select('id', 'total', 'status', 'created_at')
+            ->select('id', 'total', 'status', 'created_at', 'code')
             ->orderBy('created_at', 'desc')->get();
 
 
@@ -89,10 +89,21 @@ class OrdersController extends Controller
             }
             $total += $book->price * $item['quantity'];
         }
+        $currentYear = date('Y');
+        $clientId = $client->id;
+        
+        $orderCount = Order::where('client_id', $clientId)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+        
+        $counter = str_pad($orderCount + 1, 3, '0', STR_PAD_LEFT);
+        
+        $orderCode = "ORD-{$currentYear}-{$clientId}-{$counter}";
 
         $newOrder = Order::create([
             'client_id' => $client->id, 
             'total' => $total,
+            'code' => $orderCode,
             'status' => Order::PENDING,
         ]);
 

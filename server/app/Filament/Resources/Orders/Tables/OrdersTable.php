@@ -11,6 +11,7 @@ use Filament\Tables\Columns\TextColumn;
 use App\Models\Order;
 use App\Filament\Resources\Orders\OrderResource;
 use Filament\Support\Icons\Heroicon;
+use Filament\Actions\Action;
 
 class OrdersTable
 {
@@ -18,10 +19,10 @@ class OrdersTable
     {
         return $table
             ->columns([
+                TextColumn::make('code')
+                    ->label('Order Code')->sortable()->searchable()->icon(Heroicon::Identification),
                 TextColumn::make('client.user.name')
                     ->label('Client Name')->sortable()->searchable()->icon(Heroicon::User),
-                TextColumn::make('client.user.email')
-                    ->label('Client Email')->sortable()->searchable()->icon(Heroicon::Envelope),
                 TextColumn::make('total')
                     ->label('Total Amount')
                     ->money('USD')->sortable()->icon(Heroicon::CurrencyDollar),
@@ -41,7 +42,21 @@ class OrdersTable
                 //
             ])
             ->recordActions([
-                ViewAction::make()
+                ViewAction::make(),
+                Action::make('approveAndShip')
+                    ->label('Approve and Ship')
+                    ->color('success')
+                    ->icon(Heroicon::CheckCircle)
+                    ->action(function (Order $order) {
+                        (new OrdersServices)->approveAndShipOrder($order->id);
+                    })
+                    ->visible(fn (Order $order): bool => $order->status === Order::PENDING)
+                    ->requiresConfirmation()
+                    ->modalDescription('Are you sure you want to approve and ship this order?')
+                    ->modalHeading('Approve and Ship Order')
+                    ->modalSubmitActionLabel('Approve and Ship')
+                    ->modalCancelActionLabel('Cancel'),
+
                 // EditAction::make(),
             ])
             ->toolbarActions([
