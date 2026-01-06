@@ -136,6 +136,9 @@ class OrdersController extends Controller
                 'total_price' => $book->price * $item['quantity'],
             ]);
         }
+        $client->refresh();
+        $client->update(['balance' => $client->balance - $total]);
+        
         (new NotificationsService)->sendNotification('New Order Made', "New order has been created by {$user->name}", [
             Action::make('View Order')
                 ->url(OrderResource::getUrl('view', ['record' => $newOrder]))
@@ -174,7 +177,11 @@ class OrdersController extends Controller
             ], 400);
         }
 
+        $client->refresh();
+        $client->update(['balance' => $client->balance + $order->total]);
+
         $order->update(['status' => Order::CANCELLED]);
+        
         (new NotificationsService)->sendNotification('Order Cancelled', "Order # {$order->id} has been cancelled by {$user->name}", [
             Action::make('View Order')
                 ->url(OrderResource::getUrl('view', ['record' => $order]))

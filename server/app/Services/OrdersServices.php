@@ -21,7 +21,5 @@ class OrdersServices
             $book->update(['stock' => $book->stock - $book->pivot->quantity]);
         });
         $order->update(['status' => Order::CONFIRMED]);
-
-        $client->update(['balance' => $client->balance - $order->total]);
     }
 }
