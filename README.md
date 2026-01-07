@@ -17,12 +17,6 @@ Watch a video demonstration of the application in action:
 
 **[📹 Watch Application Demo Video](https://drive.google.com/file/d/1iBiZaUbhrTvbQJbZjS6UhYRpqxrDu4zY/view?usp=drive_link)**
 
-> **Note**: Replace `YOUR_VIDEO_ID` with your actual Google Drive video ID. To get the video ID:
-> 1. Upload your video to Google Drive
-> 2. Right-click the video → "Get link" → Set to "Anyone with the link"
-> 3. Copy the link (format: `https://drive.google.com/file/d/VIDEO_ID/view?usp=sharing`)
-> 4. Extract the `VIDEO_ID` and replace it in the link above
-
 The demo video showcases:
 - Mobile app features (browsing, cart, checkout, orders, my books)
 - Admin dashboard functionality (books management, orders management, client management)
@@ -282,11 +276,97 @@ php artisan queue:listen
 
 ### Environment Variables
 
-Ensure your `.env` file in the `server` directory includes:
-- Database configuration
-- AWS S3 credentials (for file storage)
-- Queue connection settings
-- App URL and other Laravel settings
+Create a `.env` file in the `server` directory by copying the example file:
+
+```bash
+cd server
+cp .env.example .env
+```
+
+Then generate an application key:
+
+```bash
+php artisan key:generate
+```
+
+#### Example `.env` Configuration
+
+The `.env.example` file contains the following configuration structure:
+
+```env
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+APP_LOCALE=en
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=en_US
+
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=12
+
+LOG_CHANNEL=stack
+LOG_STACK=single
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=redis
+
+CACHE_STORE=redis
+
+MEMCACHED_HOST=127.0.0.1
+
+REDIS_CLIENT=phpredis
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+MAIL_MAILER=log
+MAIL_SCHEME=null
+MAIL_HOST=127.0.0.1
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+AWS_ACCESS_KEY_ID=your_aws_access_key_id
+AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+AWS_DEFAULT_REGION=us-east-2
+AWS_BUCKET=your_s3_bucket_name
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+VITE_APP_NAME="${APP_NAME}"
+```
+
+**Important Configuration Values to Update:**
+
+- **`APP_KEY`**: Generated automatically with `php artisan key:generate`
+- **`DB_DATABASE`**: Your MySQL database name
+- **`DB_USERNAME`**: Your MySQL database username
+- **`DB_PASSWORD`**: Your MySQL database password
+- **`AWS_ACCESS_KEY_ID`**: Your AWS access key for S3 storage
+- **`AWS_SECRET_ACCESS_KEY`**: Your AWS secret key for S3 storage
+- **`AWS_BUCKET`**: Your S3 bucket name for storing book covers and PDFs
+- **`AWS_DEFAULT_REGION`**: AWS region where your S3 bucket is located
 
 ### Database Seeding
 
