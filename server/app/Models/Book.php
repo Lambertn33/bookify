@@ -45,6 +45,16 @@ class Book extends Model
     }
 
     /**
+     * The clients that belong to the Book
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(Client::class, 'client_books', 'book_id', 'client_id');
+    }
+
+    /**
      * Get all of the reviews for the Client
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
