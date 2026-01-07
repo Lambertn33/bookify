@@ -31,10 +31,10 @@ const ProfileScreen = () => {
       },
     },
     {
-      title: 'My Favorites',
-      icon: <Ionicons name="heart-outline" size={24} color="#000000" />,
+      title: 'My Books',
+      icon: <Ionicons name="book-outline" size={24} color="#000000" />,
       onPress: () => {
-        console.log('My Favorites');
+        router.push('/user/MyBooks');
       },
     },
   ];
