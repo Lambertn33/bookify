@@ -11,6 +11,24 @@ The application consists of:
 - **Laravel REST API (Server)**: Backend API handling business logic, authentication, and data management
 - **Filament Admin Panel**: Comprehensive admin dashboard for managing books, orders, clients, and inventory
 
+## 🎥 Application Demo
+
+Watch a video demonstration of the application in action:
+
+**[📹 Watch Application Demo Video](https://drive.google.com/file/d/1iBiZaUbhrTvbQJbZjS6UhYRpqxrDu4zY/view?usp=drive_link)**
+
+> **Note**: Replace `YOUR_VIDEO_ID` with your actual Google Drive video ID. To get the video ID:
+> 1. Upload your video to Google Drive
+> 2. Right-click the video → "Get link" → Set to "Anyone with the link"
+> 3. Copy the link (format: `https://drive.google.com/file/d/VIDEO_ID/view?usp=sharing`)
+> 4. Extract the `VIDEO_ID` and replace it in the link above
+
+The demo video showcases:
+- Mobile app features (browsing, cart, checkout, orders, my books)
+- Admin dashboard functionality (books management, orders management, client management)
+- Order processing workflow
+- Digital book access and PDF viewing
+
 ## 🛠️ Technologies Used
 
 ### Frontend

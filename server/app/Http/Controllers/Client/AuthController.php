@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Client;
 use Illuminate\Support\Facades\Hash;
+use App\Services\NotificationsService;
+use Filament\Actions\Action;
 
 class AuthController extends Controller
 {
@@ -39,6 +41,11 @@ class AuthController extends Controller
                     'city' => $request->city,
                     'phone' => $request->phone,
                     'balance' => 10000,
+                ]);
+                (new NotificationsService)->sendNotification('New System member registered', "A new system member has been registered: {$user->names}", [
+                    Action::make('Mark as Read')
+                        ->markAsRead()
+                        ->color('primary'),
                 ]);
                 // automatically login the user
                 return $this->login($request);
