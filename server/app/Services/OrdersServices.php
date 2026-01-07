@@ -18,7 +18,7 @@ class OrdersServices
         if (!$order) {
             throw new \Exception('Order not found');
         }
-        $order->books->each(function ($book) {
+        $order->books->each(function ($book) use ($client) {
             $book->update(['stock' => $book->stock - $book->pivot->quantity]);
             $this->addBookToClient($client, $book->id);
         });
