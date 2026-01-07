@@ -24,11 +24,6 @@ export const removeBookFromCartInLocalStorage = async (id: number) => {
     await AsyncStorage.setItem('cartItems', JSON.stringify(cartItems.filter(item => item.id !== id)));
 }
 
-export const updateBookQuantityInLocalStorage = async (id: number, quantity: number) => {
-    const cartItems = await getCartItemsFromLocalStorage();
-    await AsyncStorage.setItem('cartItems', JSON.stringify(cartItems.map(item => item.id === id ? { ...item, quantity } : item)));
-}
-
 export const clearCartInLocalStorage = async () => {
     await AsyncStorage.removeItem('cartItems');
 }

@@ -4,7 +4,6 @@ import { getApiUrl } from '@/api/constants';
 
 interface OrderItem {
     book_id: number;
-    quantity: number;
 }
 
 interface Order {

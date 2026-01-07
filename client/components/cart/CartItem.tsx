@@ -13,31 +13,19 @@ export interface CartBook {
   author: string;
   price: string;
   cover_image_url?: string;
-  quantity: number;
 }
 
 interface CartItemProps {
   item: CartBook;
-  quantity: number;
 }
 
-const CartItem = ({ item, quantity }: CartItemProps) => {
+const CartItem = ({ item }: CartItemProps) => {
   
-  const { removeBookFromCart, updateBookQuantity, getCartItemTotalPrice } = useContext(CartContext);
+  const { removeBookFromCart, getCartItemTotalPrice } = useContext(CartContext);
 
   const handleRemoveItem = () => {
     removeBookFromCart(item.id);
     Alert.alert('Item removed from cart', 'Item has been removed from your cart');
-  };
-
-  const handleIncreaseQuantity = () => {
-    updateBookQuantity(item.id, item.quantity + 1);
-  };
-
-  const handleDecreaseQuantity = () => {
-    if (item.quantity > 1) {
-        updateBookQuantity(item.id, item.quantity - 1);
-      }
   };
 
   return (
@@ -59,9 +47,6 @@ const CartItem = ({ item, quantity }: CartItemProps) => {
           <AppText style={styles.cartItemTotal}>Total: ${getCartItemTotalPrice(item.id)}</AppText>
         </AppView>
         <CartActions
-          quantity={quantity}
-          onIncreaseQuantity={handleIncreaseQuantity}
-          onDecreaseQuantity={handleDecreaseQuantity}
           onRemoveItem={handleRemoveItem}
         />
       </AppView>

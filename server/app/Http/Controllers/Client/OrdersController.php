@@ -92,7 +92,6 @@ class OrdersController extends Controller
         $request->validate([
             'items' => 'required|array|min:1',
             'items.*.book_id' => 'required|integer|exists:books,id',
-            'items.*.quantity' => 'required|integer|min:1',
         ]);
         
         foreach ($request->items as $item) {
@@ -103,12 +102,13 @@ class OrdersController extends Controller
                 ], 404);
             }
 
-            if ($book->stock < $item['quantity']) {
+            // Check if book is in stock (quantity is always 1 for digital books)
+            if ($book->stock < 1) {
                 return response()->json([
-                    'message' => "Book stock not enough: {$book->title} - {$book->stock} < {$item['quantity']}",
+                    'message' => "Book out of stock: {$book->title}",
                 ], 422);
             }
-            $total += $book->price * $item['quantity'];
+            $total += $book->price;
         }
         
         // Check if client has sufficient balance
@@ -141,9 +141,9 @@ class OrdersController extends Controller
         foreach ($request->items as $index => $item) {
             $book = Book::find($item['book_id']);
             $newOrder->books()->attach($item['book_id'], [
-                'quantity' => $item['quantity'],
+                'quantity' => 1,
                 'unit_price' => $book->price,
-                'total_price' => $book->price * $item['quantity'],
+                'total_price' => $book->price,
             ]);
         }
         

@@ -6,7 +6,7 @@ import { AuthContext } from '@/contexts/AuthContext';
 
 
 interface CreateOrderObject {
-    items: {book_id: number; quantity: number}[];
+    items: {book_id: number}[];
 }
 
 interface MyOrdersResponse {

@@ -4,30 +4,12 @@ import { AppView, AppText } from '@/components/ui'
 import { Ionicons } from '@expo/vector-icons'
 
 interface CartActionsProps {
-  quantity: number;
-  onIncreaseQuantity: () => void;
-  onDecreaseQuantity: () => void;
   onRemoveItem: () => void;
 }
 
-const CartActions = ({ quantity, onIncreaseQuantity, onDecreaseQuantity, onRemoveItem }: CartActionsProps) => {
+const CartActions = ({onRemoveItem }: CartActionsProps) => {
   return (
     <AppView style={styles.quantityContainer}>
-      <AppView style={styles.quantityControls}>
-        <Pressable
-          onPress={onDecreaseQuantity}
-          style={styles.quantityButton}
-        >
-          <Ionicons name="remove" size={20} color="#000000" />
-        </Pressable>
-        <AppText style={styles.quantityValue}>{quantity}</AppText>
-        <Pressable
-          onPress={onIncreaseQuantity}
-          style={styles.quantityButton}
-        >
-          <Ionicons name="add" size={20} color="#000000" />
-        </Pressable>
-      </AppView>
       <Pressable
         onPress={onRemoveItem}
         style={styles.removeButton}

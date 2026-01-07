@@ -4,7 +4,6 @@ import {
     getCartItemsFromLocalStorage, 
     addBookToCartInLocalStorage, 
     removeBookFromCartInLocalStorage, 
-    updateBookQuantityInLocalStorage, 
     clearCartInLocalStorage }
  from '@/helpers/cart';
 
@@ -21,7 +20,6 @@ interface CartContextType {
     cartItems: CartBook[];
     addBookToCart: (book: CartBook) => Promise<void>;
     removeBookFromCart: (id: number) => Promise<void>;
-    updateBookQuantity: (id: number, quantity: number) => Promise<void>;
     clearCart: () => Promise<void>;
     getCartItemsCount: () => number;
     getCartTotalPrice: () => number;
@@ -32,7 +30,6 @@ export const CartContext = createContext<CartContextType>({
     cartItems: [],
     addBookToCart: async () => {},
     removeBookFromCart: async () => {},
-    updateBookQuantity: async () => {},
     clearCart: async () => {},
     getCartItemsCount: () => 0,
     getCartTotalPrice: () => 0,
@@ -64,12 +61,6 @@ export const CartProvider = ({children, initialCartItems}: {children: React.Reac
     return Number(item.price) * item.quantity;
   }
 
-  const updateBookQuantity = async(id: number, quantity: number) => {
-    await updateBookQuantityInLocalStorage(id, quantity);
-    const items = await getCartItemsFromLocalStorage();
-    setCartItems(items);
-  }
-
   const clearCart = async() => {
     await clearCartInLocalStorage();
     setCartItems([]);
@@ -87,7 +78,6 @@ export const CartProvider = ({children, initialCartItems}: {children: React.Reac
     cartItems,
     addBookToCart,
     removeBookFromCart,
-    updateBookQuantity,
     clearCart,
     getCartItemsCount,
     getCartTotalPrice,

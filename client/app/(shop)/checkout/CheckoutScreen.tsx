@@ -37,7 +37,7 @@ const CheckoutScreen = () => {
   });
 
   const handlePlaceOrder = () => {
-    createOrderMutation.mutate({ items: cartItems.map(item => ({ book_id: item.id, quantity: item.quantity })) });
+    createOrderMutation.mutate({ items: cartItems.map(item => ({ book_id: item.id })) });
   }
 
   const handleCloseModal = async() => {
