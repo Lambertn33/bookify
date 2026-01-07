@@ -6,7 +6,6 @@ interface CartBook {
   title: string;
   author: string;
   price: string;
-  quantity: number;
 }
 
 const Items = ({ cartItems, title }: { cartItems: CartBook[], title: string }) => {
@@ -18,7 +17,7 @@ const Items = ({ cartItems, title }: { cartItems: CartBook[], title: string }) =
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => {
                 const unitPrice = Number(item.price);
-                const total = unitPrice * item.quantity;
+                const total = unitPrice;
                 return (
                   <AppView style={styles.bookItem}>
                     <AppView style={styles.bookItemLeft}>
@@ -27,7 +26,7 @@ const Items = ({ cartItems, title }: { cartItems: CartBook[], title: string }) =
                       </AppText>
                       <AppView style={styles.bookDetails}>
                         <AppText style={styles.bookDetailText}>
-                          ${unitPrice.toFixed(2)} × {item.quantity}
+                          ${unitPrice.toFixed(2)}
                         </AppText>
                       </AppView>
                     </AppView>
