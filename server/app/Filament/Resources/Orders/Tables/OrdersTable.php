@@ -13,6 +13,7 @@ use App\Filament\Resources\Orders\OrderResource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Actions\Action;
 use App\Services\OrdersServices;
+use Filament\Tables\Filters\SelectFilter;
 
 class OrdersTable
 {
@@ -40,7 +41,14 @@ class OrdersTable
                     ->dateTime('d-m-Y')->sortable()->icon(Heroicon::Calendar),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        Order::PENDING => 'Pending',
+                        Order::CONFIRMED => 'Confirmed',
+                        Order::CANCELLED => 'Cancelled',
+                    ])
+                    ->label('Status')
+                    ->native(false),
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -90,20 +90,6 @@ class BookCategoryResource extends Resource
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make()
-                ->successNotification(
-                    Notification::make()
-                        ->title('Book category updated successfully')
-                        ->body('The book category has been updated successfully.')
-                        ->success()
-                ),
-                DeleteAction::make()
-                    ->successNotification(
-                        Notification::make()
-                            ->title('Book category deleted successfully')
-                            ->body('The book category has been deleted successfully.')
-                            ->success()
-                ),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
