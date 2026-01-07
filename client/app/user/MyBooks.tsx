@@ -5,7 +5,7 @@ import { FontAwesome5, Ionicons } from '@expo/vector-icons'
 import { useGetMyBooks } from '@/hooks/useMyBooks'
 import { AppView, AppText, AppHeader } from '@/components/ui'
 import Modal from 'react-native-modal'
-import PDF from 'react-native-pdf'
+import {WebView} from 'react-native-webview'
 import { Image } from 'expo-image'
 import { useState } from 'react'
 
@@ -108,7 +108,7 @@ const MyBooks = () => {
         animationOut="slideOutDown"
       >
         <AppView style={styles.pdfModalContent}>
-          <AppView style={styles.pdfHeader}>
+          <AppView style={styles.pdfHeader} paddingTop={20} paddingBottom={20}>
             <AppText style={styles.pdfTitle} numberOfLines={1}>
               {selectedBook?.title}
             </AppText>
@@ -117,14 +117,8 @@ const MyBooks = () => {
             </Pressable>
           </AppView>
           {selectedBook?.book_path_url && (
-            <PDF
-              source={{ uri: selectedBook.book_path_url, cache: true }}
-              onLoadComplete={(numberOfPages) => {
-                console.log(`Number of pages: ${numberOfPages}`)
-              }}
-              onError={(error) => {
-                console.log('PDF Error:', error)
-              }}
+            <WebView
+              source={{ uri: selectedBook.book_path_url }}
               style={styles.pdf}
             />
           )}

@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\BooksCategoriesController;
 use App\Http\Controllers\Client\BooksController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\OrdersController;
+use App\Http\Controllers\Client\MyBooksController;
 
 Route::get('/categories', [BooksCategoriesController::class, 'index']);
 Route::prefix('books')->group(function () {
@@ -29,4 +30,8 @@ Route::prefix('orders')->middleware('auth:sanctum')->controller(OrdersController
         Route::get('/', 'getOrderDetails');
         Route::put('/cancel', 'cancelOrder');
     });
+});
+
+Route::prefix('my-books')->middleware('auth:sanctum')->controller(MyBooksController::class)->group(function () {
+    Route::get('/', 'getMyBooks');
 });
