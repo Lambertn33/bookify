@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Client extends Model
 {
@@ -47,12 +48,12 @@ class Client extends Model
     }
     
     /**
-     * The books that belong to the Book
+     * The books that belong to the Client
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function books(): BelongsToMany
     {
-        return $this->belongsToMany(Order::class, 'client_books', 'client_id', 'book_id');
+        return $this->belongsToMany(Book::class, 'client_books', 'client_id', 'book_id');
     }
 }

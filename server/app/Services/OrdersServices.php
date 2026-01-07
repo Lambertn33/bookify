@@ -6,6 +6,7 @@ use App\Models\Order;
 use Filament\Actions\Action;
 use App\Filament\Resources\Orders\OrderResource;
 use App\Services\NotificationsService;
+use App\Models\Client;
 
 class OrdersServices
 {
@@ -19,7 +20,14 @@ class OrdersServices
         }
         $order->books->each(function ($book) {
             $book->update(['stock' => $book->stock - $book->pivot->quantity]);
+            $this->addBookToClient($client, $book->id);
         });
+        
         $order->update(['status' => Order::CONFIRMED]);
+    }
+
+    public function addBookToClient(Client $client, int $bookId)
+    {
+        $client->books()->attach($bookId);
     }
 }
